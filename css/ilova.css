@@ -1,0 +1,40 @@
+/* ===================================================================
+   ILOVA.CSS — Capacitor ilova qobig'i uslubi (B13, 5-A)
+   FAQAT <html class="ilova"> bo'lganda (haqiqiy ilova ichida) ta'sir
+   qiladi. Oddiy brauzerda bu qoidalar HECH NARSAGA tegmaydi.
+   Arxitektor §5-A/§6: soxta status-bar chizilmaydi, safe-area-inset.
+=================================================================== */
+
+/* 1) Pastki tab bar ilovada DOIM ko'rinadi (planshetda ham — ilova
+      telefon rejimida ishlaydi). Brauzerda esa faqat <768px da. */
+.ilova .mobil-panel {
+  display: grid !important;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  height: calc(60px + env(safe-area-inset-bottom, 0px));
+}
+
+/* 2) YUQORI safe-area: Android WebView kontentni status-bar OSTIGA joylaydi
+   (o'zi inset qiladi), shuning uchun header'ga qo'shimcha padding-top
+   BERMAYMIZ — aks holda tepada ortiqcha bo'sh joy paydo bo'ladi (ega
+   ko'rsatgan xato). Agar keyin edge-to-edge rejim yoqilsa, StatusBar
+   plagini bilan alohida boshqariladi. */
+
+/* 3) Sahifa oxiri tab bar ostida qolib ketmasin — pastki bo'sh joy */
+.ilova body,
+.ilova .sayt-footer {
+  padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+}
+
+/* 4) Ilovada telefon raqami/qo'ng'iroq tugmasi header'da ortiqcha —
+      pastki panel va mahsulot tugmalari bor. Ixchamlik uchun yashiramiz. */
+.ilova .header-telefon { display: none; }
+
+/* 5) Matn tanlash/uzun bosishdagi ko'k belgi ilovada g'aliz ko'rinadi
+      (nav/tugmalarda). Kontent matni tanlanadi, boshqaruv yo'q. */
+.ilova .mobil-panel,
+.ilova .sayt-header,
+.ilova .qidiruv-qatori {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}

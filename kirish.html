@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arzonchi — Kirish</title>
+<style>
+  :root{ --qizil:#E60012; --qizil-matn:#C4000F; --kul:#696D75; --chiziq:#E4E7EC; --yashil:#0B7A58 }
+  *{ box-sizing:border-box }
+  body{ margin:0; font-family:system-ui,Segoe UI,Arial,sans-serif; background:#F4F6F8; color:#141417;
+        display:flex; min-height:100vh; align-items:center; justify-content:center; padding:16px }
+  .karta{ background:#fff; border-radius:20px; padding:28px 24px; width:360px; max-width:100%;
+          box-shadow:0 4px 24px rgba(20,20,23,.08) }
+  h1{ font-size:22px; margin:0 0 6px }
+  .izoh{ color:var(--kul); font-size:13.5px; margin:0 0 20px; line-height:1.5 }
+  label{ font-size:13px; color:var(--kul) }
+  input{ width:100%; height:52px; border:1.5px solid var(--chiziq); border-radius:12px; padding:0 14px;
+         font-size:17px; margin-top:6px; font-family:inherit }
+  input:focus{ outline:none; border-color:var(--qizil) }
+  .tugma{ width:100%; height:50px; border:0; border-radius:12px; background:var(--qizil); color:#fff;
+          font-size:15px; font-weight:600; margin-top:16px; cursor:pointer }
+  .tugma:active{ background:var(--qizil-matn) }
+  .kod{ display:flex; gap:10px; margin-top:6px }
+  .kod input{ text-align:center; font-size:26px; font-weight:700; padding:0 }
+  .dev{ background:#FFF7E8; border:1px dashed #E0A800; border-radius:10px; padding:10px 12px;
+        font-size:13px; margin-top:14px; color:#7A5A00 }
+  .xato{ color:var(--qizil-matn); font-size:13px; margin-top:10px; min-height:16px }
+  .yashil{ color:var(--yashil) }
+  [hidden]{ display:none !important }
+  .link{ background:none; border:0; color:var(--kul); font-size:13px; margin-top:14px; cursor:pointer; width:100% }
+</style>
+</head>
+<body>
+<div class="karta">
+  <div id="q1">
+    <h1>Kirish yoki roʻyxatdan oʻtish</h1>
+    <p class="izoh">Parol kerak emas. Raqamingizni yozing — SMS kod keladi.</p>
+    <label>Telefon raqami</label>
+    <input id="tel" type="tel" inputmode="tel" value="+998" placeholder="+998901234567">
+    <button class="tugma" id="yubor">Kod yuborish</button>
+    <div class="xato" id="x1"></div>
+  </div>
+
+  <div id="q2" hidden>
+    <h1>SMS kodni kiriting</h1>
+    <p class="izoh"><b id="telko"></b> raqamiga yuborilgan 4 xonali kod</p>
+    <div class="kod">
+      <input maxlength="1" inputmode="numeric" data-k>
+      <input maxlength="1" inputmode="numeric" data-k>
+      <input maxlength="1" inputmode="numeric" data-k>
+      <input maxlength="1" inputmode="numeric" data-k>
+    </div>
+    <div class="dev" id="devkod" hidden></div>
+    <button class="tugma" id="tasdiq">Tasdiqlash</button>
+    <div class="xato" id="x2"></div>
+    <button class="link" id="orqaga">← Raqamni oʻzgartirish</button>
+  </div>
+
+  <div id="q3" hidden>
+    <h1 class="yashil">Kirdingiz ✓</h1>
+    <p class="izoh" id="salom"></p>
+    <button class="tugma" id="davom">Kategoriyalarga oʻtish</button>
+    <button class="link" id="chiq">Chiqish</button>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+  var telefon = "";
+  var qadamlar = ["q1", "q2", "q3"];
+  function korsat(q){ qadamlar.forEach(function(x){ document.getElementById(x).hidden = (x !== q); }); }
+  function el(id){ return document.getElementById(id); }
+
+  el("yubor").onclick = async function(){
+    telefon = el("tel").value.replace(/\s/g, "");
+    el("x1").textContent = "";
+    var r = await window.ArzonchiAPI.smsYubor(telefon);
+    if(!r.ok){ el("x1").textContent = r.xato || "Xatolik"; return; }
+    el("telko").textContent = telefon;
+    if(r.dev_kod){ var d = el("devkod"); d.hidden = false; d.textContent = "Test kodi (dev): " + r.dev_kod; }
+    korsat("q2");
+    document.querySelectorAll("[data-k]")[0].focus();
+  };
+
+  var kataklar = [].slice.call(document.querySelectorAll("[data-k]"));
+  kataklar.forEach(function(inp, i){
+    inp.addEventListener("input", function(){
+      inp.value = inp.value.replace(/\D/g, "");
+      if(inp.value && i < kataklar.length - 1) kataklar[i+1].focus();
+    });
+    inp.addEventListener("keydown", function(e){
+      if(e.key === "Backspace" && !inp.value && i > 0) kataklar[i-1].focus();
+    });
+  });
+
+  el("tasdiq").onclick = async function(){
+    var kod = kataklar.map(function(x){ return x.value; }).join("");
+    el("x2").textContent = "";
+    var r = await window.ArzonchiAPI.tasdiqla(telefon, kod);
+    if(!r.ok){ el("x2").textContent = r.xato || "Xatolik"; return; }
+    el("salom").textContent = r.user.telefon + " bilan kirdingiz.";
+    korsat("q3");
+  };
+
+  el("orqaga").onclick = function(){ korsat("q1"); };
+  el("chiq").onclick = async function(){ await window.ArzonchiAPI.chiqish(); location.reload(); };
+  el("davom").onclick = function(){ location.href = "index.html"; };
+
+  // Ochilganda: allaqachon kirganmi?
+  window.addEventListener("load", async function(){
+    var r = await window.ArzonchiAPI.hisob();
+    if(r.ok){ el("salom").textContent = r.user.telefon + " bilan kirgansiz."; korsat("q3"); }
+  });
+</script>
+</body>
+</html>

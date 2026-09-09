@@ -1,0 +1,15 @@
+# Vercelga (ochiq internetga) YUKLANMAYDIGAN fayllar.
+# DIQQAT: bu ro'yxatni qisqartirmang — mijoz ma'lumoti ochiq qolib ketadi.
+
+# Mijoz shaxsiy ma'lumoti (ism, telefon, buyurtma) — hech qachon ommaga chiqmasin
+mijozlar.md
+buyurtmalar.md
+
+# Faqat lokal ishlaydigan Node skriptlari (API tortish, lokal server)
+skriptlar/
+
+# Eski nusxalar
+zaxira/
+
+# Ichki agent fayllari
+.claude/
