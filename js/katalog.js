@@ -346,10 +346,58 @@ function filtrlarniUla() {
     if (dan) dan.value = ""; if (gacha) gacha.value = "";
     qayta_chiz();
   });
+  // ── Mobil filtr = bottom-sheet (Dizayner TZ 10) ──
   var ochish = document.getElementById("filtr-ochish");
   var yon = document.getElementById("filtr-yon");
-  if (ochish && yon) ochish.addEventListener("click", function () {
-    var ochiq = yon.classList.toggle("ochiq");
-    ochish.setAttribute("aria-expanded", ochiq ? "true" : "false");
-  });
+  if (ochish && yon) {
+    // Fon (backdrop) — bir marta yaratamiz
+    var fon = document.getElementById("filtr-fon");
+    if (!fon) {
+      fon = document.createElement("div");
+      fon.id = "filtr-fon";
+      fon.className = "filtr-fon";
+      document.body.appendChild(fon);
+    }
+    // Yopish tugmasi (sheet sarlavhasiga)
+    var bosh = yon.querySelector(".filtr-yon-bosh");
+    if (bosh && !bosh.querySelector(".filtr-yopish")) {
+      var yopish = document.createElement("button");
+      yopish.type = "button";
+      yopish.className = "filtr-yopish";
+      yopish.setAttribute("aria-label", "Filtrni yopish");
+      yopish.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      bosh.appendChild(yopish);
+      yopish.addEventListener("click", sheetYop);
+    }
+    // "Natijalarni ko'rish" tugmasi (sheet oxiriga)
+    if (!yon.querySelector(".filtr-korish")) {
+      var korish = document.createElement("button");
+      korish.type = "button";
+      korish.className = "filtr-korish";
+      korish.id = "filtr-korish";
+      korish.textContent = "Natijalarni ko'rish";
+      yon.appendChild(korish);
+      korish.addEventListener("click", sheetYop);
+    }
+
+    function sheetOch() {
+      yon.classList.add("ochiq");
+      fon.classList.add("ochiq");
+      document.body.classList.add("sheet-ochiq");
+      ochish.setAttribute("aria-expanded", "true");
+    }
+    function sheetYop() {
+      yon.classList.remove("ochiq");
+      fon.classList.remove("ochiq");
+      document.body.classList.remove("sheet-ochiq");
+      ochish.setAttribute("aria-expanded", "false");
+    }
+    ochish.addEventListener("click", function () {
+      if (yon.classList.contains("ochiq")) sheetYop(); else sheetOch();
+    });
+    fon.addEventListener("click", sheetYop);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && yon.classList.contains("ochiq")) sheetYop();
+    });
+  }
 }

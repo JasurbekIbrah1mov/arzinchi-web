@@ -58,10 +58,30 @@ function mahsulotniChiz(konteyner, mahsulot) {
       tablarHTML(mahsulot) +
     "</div>" +
     birgaArzonHTML(mahsulot) +
-    karusellarHTML(mahsulot);
+    karusellarHTML(mahsulot) +
+    mobilSotibCtaHTML(mahsulot);
+
+  document.body.classList.toggle("mobil-cta-bor", !!mahsulot.mavjud);
 
   var breadcrumbNom = document.getElementById("breadcrumb-mahsulot-nomi");
   if (breadcrumbNom) breadcrumbNom.textContent = mahsulot.nomi;
+}
+
+/* --- Mobil sticky CTA (tab bar ustida) — Dizayner MobilMahsulot ------- */
+function mobilSotibCtaHTML(mahsulot) {
+  if (!mahsulot.mavjud) return "";
+  var savatda = DOKON.savatdaBormi(mahsulot.id);
+  var nasiya = "";
+  if (DOKON.nasiyaMumkinmi(mahsulot.narx)) {
+    var eng = DOKON.nasiyaEngKichik(mahsulot.narx);
+    if (eng) nasiya = '<span class="msc-nasiya">' + narxniFormatla(eng.oylik) + " &times; " + eng.oy + " oy</span>";
+  }
+  return '<div class="mobil-sotib-cta">' +
+    '<div class="msc-narx"><b>' + narxniFormatla(mahsulot.narx) + "</b>" + nasiya + "</div>" +
+    '<button type="button" class="karta-cta msc-tugma' + (savatda ? " savatda" : "") + '"' +
+    ' data-savat-qosh="' + htmlXavfsiz(mahsulot.id) + '">' +
+    (savatda ? "Savatda &#10003;" : "Savatga qo'shish") + "</button>" +
+    "</div>";
 }
 
 /* --- 1-USTUN: galereya (asosiy rasm + kichik rasmlar) ----------------- */

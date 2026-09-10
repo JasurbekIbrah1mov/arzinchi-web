@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rasmiylashtirish — Arzonchi</title>
+  <meta name="description" content="Buyurtmani rasmiylashtiring — aloqa ma'lumotlari, yetkazib berish va to'lov usulini tanlang.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/ilova.css">
+</head>
+<body data-sahifa="savat">
+
+  <!-- ══ XIZMAT QATORI (Dizayner TZ 03) ══ -->
+  <div class="xizmat-qatori">
+    <div class="konteyner xizmat-ichki">
+      <div class="xizmat-chap">
+        <button type="button" class="xizmat-shahar" data-shahar-tugma aria-label="Shaharni tanlash"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-manzil-matn>Toshkent</span></button>
+        <span>Yetkazib berish 1 kun</span>
+        <span>30 ta filial · 09:00–21:00</span>
+      </div>
+      <div class="xizmat-ong">
+        <a href="savat.html">Buyurtmani kuzatish</a>
+        <a href="aloqa.html">Savol-javob</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ HEADER ══ -->
+  <header class="sayt-header">
+    <div class="konteyner header-ichki">
+      <a href="index.html" class="logo" aria-label="Arzonchi bosh sahifasi">ARZONCHI<span class="logo-nuqta">.</span></a>
+      <a href="katalog.html" class="katalog-tugma"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Katalog</a>
+      <form class="header-qidiruv" action="katalog.html" method="get" role="search">
+        <input type="search" name="q" placeholder="Muzlatgich, kir yuvish mashinasi…" aria-label="Qidiruv">
+        <button type="submit" aria-label="Qidirish"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+      </form>
+      <div class="header-bosh"></div>
+      <div class="header-ong">
+        <a href="saralangan.html" class="dokon-ikonka" aria-label="Saralanganlar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Saralangan</span><span class="dokon-badge" data-saralangan-soni hidden>0</span>
+        </a>
+        <a href="savat.html" class="dokon-ikonka" aria-label="Savat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 5h2l2.2 10.4a2 2 0 0 0 2 1.6h7.5a2 2 0 0 0 2-1.6L21 8H7"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg><span>Savat</span><span class="dokon-badge" data-savat-soni hidden>0</span>
+        </a>
+        <button type="button" class="dokon-ikonka" data-hisob-tugma aria-label="Hisobim">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c0-4.4 3.4-7 7.5-7s7.5 2.6 7.5 7"/></svg><span data-hisob-nom>Kirish</span>
+        </button>
+        <button type="button" class="hamburger-tugma" aria-label="Menyuni ochish" aria-expanded="false">
+          <svg class="ikon-och" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <svg class="ikon-yop" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="konteyner">
+    <div class="breadcrumb"><a href="index.html">Bosh sahifa</a> / <a href="savat.html">Savat</a> / Rasmiylashtirish</div>
+  </div>
+
+  <section class="bolim bolim-tepasi-kichik">
+    <div class="konteyner">
+      <!-- ══ QADAM INDIKATORI (stepper) ══ -->
+      <ol class="checkout-qadam" aria-label="Buyurtma bosqichlari">
+        <li class="cq-band cq-tugadi"><span class="cq-belgi"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="cq-matn">Savat</span></li>
+        <li class="cq-chiziq"></li>
+        <li class="cq-band cq-faol"><span class="cq-belgi">2</span><span class="cq-matn">Ma'lumotlar</span></li>
+        <li class="cq-chiziq"></li>
+        <li class="cq-band"><span class="cq-belgi">3</span><span class="cq-matn">To'lov</span></li>
+        <li class="cq-chiziq"></li>
+        <li class="cq-band"><span class="cq-belgi">4</span><span class="cq-matn">Tasdiq</span></li>
+      </ol>
+
+      <div id="rasmiy-tarkib">
+        <!-- js/rasmiylashtirish.js orqali to'ldiriladi -->
+      </div>
+    </div>
+  </section>
+
+  <footer class="sayt-footer sayt-footer--yangi">
+    <div class="konteyner footer-yangi-ichki">
+      <div class="footer-yangi-logo">ARZONCHI<span class="logo-nuqta">.</span></div>
+      <nav class="footer-yangi-havola" aria-label="Footer havolalar">
+        <a href="katalog.html">Katalog</a>
+        <a href="filiallar.html">Filiallar</a>
+        <a href="katalog.html">Nasiya</a>
+        <a href="biz-haqimizda.html">Kafolat</a>
+        <a href="aloqa.html">Aloqa</a>
+      </nav>
+      <a href="tel:+998901234567" class="footer-yangi-tel">+998 90 123 45 67</a>
+    </div>
+  </footer>
+
+  <script src="js/malumotlar-mahsulot.js"></script>
+  <script src="js/malumotlar-kategoriya.js"></script>
+  <script src="js/malumotlar-filial.js"></script>
+  <script src="js/malumotlar-qoshimcha.js"></script>
+  <script src="js/umumiy.js"></script>
+  <script src="js/do-kon.js"></script>
+  <script src="js/qidiruv.js"></script>
+  <script src="js/ilova.js"></script>
+  <script src="js/rasmiylashtirish.js"></script>
+  <script src="js/harakat.js"></script>
+  <nav class="mobil-panel" aria-label="Tezkor navigatsiya">
+    <a href="index.html" data-mobil="bosh">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Bosh sahifa</span>
+    </a>
+    <a href="katalog.html" data-mobil="katalog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <span>Katalog</span>
+    </a>
+    <a href="saralangan.html" data-mobil="saralangan">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span>Saralangan</span>
+      <span class="dokon-badge" data-saralangan-soni hidden>0</span>
+    </a>
+    <a href="savat.html" data-mobil="savat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>Savat</span>
+      <span class="dokon-badge" data-savat-soni hidden>0</span>
+    </a>
+    <a href="#" data-hisob-tugma data-mobil="hisob">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span data-hisob-nom>Kirish</span>
+    </a>
+  </nav>
+</body>
+</html>

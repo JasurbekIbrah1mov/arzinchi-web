@@ -3,3 +3,6 @@
 .env.local
 mijozlar.md
 buyurtmalar.md
+
+.vercel
+.env*

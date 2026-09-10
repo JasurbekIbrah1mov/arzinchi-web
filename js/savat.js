@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         izoh: "Katalogdan mahsulot tanlang — u shu yerda paydo bo'ladi.",
         tugma: '<a href="katalog.html" class="tugma tugma-asosiy">Katalogga o\'tish</a>'
       });
+      document.body.classList.remove("mobil-cta-bor");
       korilganlarniChiz();
       return;
     }
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var hammasiTanlangan = royxat.every(function (q) { return q.tanlangan; });
 
     var html =
+      checkoutQadamHTML(1) +
       '<div class="savat-tuzilma">' +
       '<div class="savat-royxat">' +
       '<div class="savat-bosh-qator">' +
@@ -58,10 +60,22 @@ document.addEventListener("DOMContentLoaded", function () {
       html += qatorHTML(royxat[i]);
     }
 
-    html += "</div>" + xulosaHTML() + "</div>";
+    html += "</div>" + xulosaHTML() + "</div>" + mobilSavatCtaHTML();
     tarkib.innerHTML = html;
+    document.body.classList.add("mobil-cta-bor");
     hodisalarniUla();
     DOKON.badgelarYangila();
+  }
+
+  /* Mobil sticky CTA (tab bar ustida) — jami + Rasmiylashtirish */
+  function mobilSavatCtaHTML() {
+    var h = DOKON.savatHisob();
+    var ochiq = h.tanlanganTur > 0;
+    return '<div class="mobil-savat-cta">' +
+      '<div class="msc-narx"><span>' + h.tanlanganDona + ' dona</span><b>' + narxniFormatla(h.tanlanganJami) + "</b></div>" +
+      '<button type="button" class="karta-cta msc-tugma" id="rasmiylashtir-mobil"' +
+      (ochiq ? "" : " disabled") + ">Rasmiylashtirish</button>" +
+      "</div>";
   }
 
   /* ---------------------------------------------------------------
@@ -216,6 +230,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var rasmiy = document.getElementById("rasmiylashtir");
     if (rasmiy) rasmiy.addEventListener("click", rasmiylashtirish);
+    var rasmiyMobil = document.getElementById("rasmiylashtir-mobil");
+    if (rasmiyMobil) rasmiyMobil.addEventListener("click", rasmiylashtirish);
 
     // Header/xulosadagi shahar tugmasi
     ulash("[data-shahar-tugma]", "click", function (h) {
@@ -236,90 +252,19 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* ---------------------------------------------------------------
-     RASMIYLASHTIRISH
-     Ro'yxatdan o'tmagan bo'lsa — avval ism va telefon so'raladi
-     (Jasur aka: "ro'yxatdan kirganda so'rashlik, telefon raqam, ismini").
+     RASMIYLASHTIRISH — alohida sahifaga o'tadi (Dizayner TZ 07).
+     Buyurtma endi modal emas, to'liq sahifada rasmiylashtiriladi:
+     rasmiylashtirish.html (forma) -> tasdiq.html (natija).
+     Ro'yxatdan o'tmagan bo'lsa avval kirish so'raladi.
   ---------------------------------------------------------------- */
   function rasmiylashtirish() {
-    DOKON.hisobTalab(function (hisob) {
-      var h = DOKON.savatHisob();
-      if (h.tanlanganTur === 0) {
-        DOKON.xabar("Kamida bitta mahsulotni belgilang.", "ogoh");
-        return;
-      }
-
-      var tanlangan = document.querySelector('input[name="tolov"]:checked');
-      var tolovKod = tanlangan ? tanlangan.value : "naqd";
-      var tolovNomi = tolovKod;
-      for (var i = 0; i < TOLOV_USULLARI.length; i++) {
-        if (TOLOV_USULLARI[i].kod === tolovKod) tolovNomi = TOLOV_USULLARI[i].nom;
-      }
-
-      var manzil = DOKON.manzilOl();
-      var raqam = "AR-" + String(Date.now()).slice(-6);
-
-      // To'liq buyurtmani egaga yuborish (buyurtmalar.md) — tanlangan mahsulotlar
-      var royxatB = DOKON.savatRoyxati();
-      var buyurtmaMahsulotlar = [];
-      for (var bi = 0; bi < royxatB.length; bi++) {
-        if (!royxatB[bi].tanlangan) continue;
-        var bm = mahsulotniTop(royxatB[bi].id);
-        if (!bm) continue;
-        buyurtmaMahsulotlar.push({
-          id: bm.id, nomi: bm.nomi, soni: royxatB[bi].soni,
-          narxMatn: narxniFormatla(bm.narx * royxatB[bi].soni)
-        });
-      }
-      DOKON.buyurtmaYoz({
-        raqam: raqam,
-        sana: new Date().toISOString(),
-        mijoz: { ism: hisob.ism, telefon: DOKON.telefonKorinishi(hisob.telefon) },
-        tolov: tolovNomi,
-        yetkazish: manzil ? (manzil.filialNomi + " — " + manzil.yetkazish) : "",
-        mahsulotlar: buyurtmaMahsulotlar,
-        jamiMatn: narxniFormatla(h.tanlanganJami)
-      });
-
-      var ichki =
-        '<p class="modal-izoh">Buyurtmangiz qabul qilindi. Operator tez orada ' +
-        "siz bilan bog'lanadi.</p>" +
-        '<div class="xulosa-qator"><span>Buyurtma raqami</span><span><strong>' + raqam + "</strong></span></div>" +
-        '<div class="xulosa-qator"><span>Mijoz</span><span>' + htmlXavfsiz(hisob.ism) + "</span></div>" +
-        '<div class="xulosa-qator"><span>Telefon</span><span>' +
-        htmlXavfsiz(DOKON.telefonKorinishi(hisob.telefon)) + "</span></div>" +
-        '<div class="xulosa-qator"><span>To\'lov</span><span>' + htmlXavfsiz(tolovNomi) + "</span></div>" +
-        (manzil
-          ? '<div class="xulosa-qator"><span>' + htmlXavfsiz(manzil.filialNomi) + "</span><span>" +
-            htmlXavfsiz(manzil.yetkazish) + "</span></div>"
-          : "") +
-        '<div class="xulosa-qator xulosa-qator--jami"><span>Jami</span><span>' +
-        narxniFormatla(h.tanlanganJami) + "</span></div>" +
-        '<button type="button" class="tugma tugma-asosiy tugma-toliq" style="margin-top:16px" id="buyurtma-ok">Yopish</button>' +
-        '<p class="modal-mayda">Bu — namoyish rejimi: buyurtma serverga yuborilmaydi, ' +
-        "chunki sayt hozircha serversiz ishlaydi.</p>";
-
-      DOKON.modalOch("Buyurtma qabul qilindi", ichki);
-
-      var ok = document.getElementById("buyurtma-ok");
-      if (ok) {
-        ok.addEventListener("click", function () {
-          // Faqat TANLANGAN mahsulotlar o'chiriladi, belgilanmaganlari qoladi.
-          // Ular "sotib olingan" ro'yxatiga tushadi — endi mijoz shu
-          // mahsulotlarga fikr qoldira oladi (faqat olgan odam qoldiradi).
-          var royxat = DOKON.savatRoyxati();
-          var olinganIdlar = [];
-          for (var i = 0; i < royxat.length; i++) {
-            if (royxat[i].tanlangan) {
-              olinganIdlar.push(royxat[i].id);
-              DOKON.savatOchir(royxat[i].id);
-            }
-          }
-          DOKON.sotibOlinganYoz(olinganIdlar);
-          DOKON.modalYop();
-          DOKON.xabar("Buyurtma " + raqam + " qabul qilindi", "ok");
-          chiz();
-        });
-      }
+    var h = DOKON.savatHisob();
+    if (h.tanlanganTur === 0) {
+      DOKON.xabar("Kamida bitta mahsulotni belgilang.", "ogoh");
+      return;
+    }
+    DOKON.hisobTalab(function () {
+      window.location.href = "rasmiylashtirish.html";
     });
   }
 
@@ -344,3 +289,20 @@ document.addEventListener("DOMContentLoaded", function () {
     DOKON.badgelarYangila();
   }
 });
+
+/* Checkout stepper — 4 qadam (Savat / Ma'lumotlar / To'lov / Tasdiq).
+   active: joriy qadam (1..4). Undan oldingilar "tugadi", o'zi "faol". */
+function checkoutQadamHTML(active) {
+  var qadamlar = ["Savat", "Ma'lumotlar", "To'lov", "Tasdiq"];
+  var chek = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+  var html = '<ol class="checkout-qadam" aria-label="Buyurtma bosqichlari">';
+  for (var i = 0; i < qadamlar.length; i++) {
+    var n = i + 1;
+    if (i > 0) html += '<li class="cq-chiziq' + (n <= active ? " cq-chiziq--tugadi" : "") + '"></li>';
+    var sinf = n < active ? " cq-tugadi" : (n === active ? " cq-faol" : "");
+    var belgi = n < active ? chek : String(n);
+    html += '<li class="cq-band' + sinf + '"><span class="cq-belgi">' + belgi +
+      '</span><span class="cq-matn">' + qadamlar[i] + "</span></li>";
+  }
+  return html + "</ol>";
+}
