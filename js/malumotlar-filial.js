@@ -333,7 +333,7 @@ const FILIALLAR_AVTOMATIK = [
       shuning uchun API'dagi haqiqiysi qoldi, qo'lda yozilgan
       TAKRORI o'chirildi. Manzilini ega admin ekrani orqali kiritadi.
 
-    • fl-03 «Sergeli» — hozircha yo'q. Ega: «yo'q filiallarimiz nomi
+    • fl-03 «Sergeli» — hozircha yo'q edi. Ega: «yo'q filiallarimiz nomi
       qolsin, lekin hali ochilmagan bo'lib chiqsin».
       → Nomi qoldi, `holat: "ochilmagan"` qo'yildi. Soxta telefon,
       manzil va xarita OLIB TASHLANDI — mijoz mavjud bo'lmagan
@@ -343,19 +343,17 @@ const FILIALLAR_AVTOMATIK = [
       "ochiq"      (yoki maydon umuman yo'q) — oddiy ishlayotgan filial
       "ochilmagan" — hali ochilmagan; kartochkada «Tez orada ochiladi»
                      yorlig'i chiqadi, telefon/xarita ko'rsatilmaydi.
+
+  ─────────────────────────────────────────────────────────────────────
+  2026-09-14 — YANA TOZALANDI (ega ruxsati, 10.09)
+  ─────────────────────────────────────────────────────────────────────
+    • fl-03 «Sergeli» — endi BUTUNLAY O'CHIRILDI (avval "ochilmagan"
+      holatda ko'rsatilardi, endi umuman ko'rsatilmaydi). Chilonzor va
+      API'dan (FILIALLAR_AVTOMATIK) keladigan filiallarga tegilmadi.
+      FILIALLAR_QOLDA hozircha bo'sh — kelajakda qo'lda filial qo'shilsa
+      shu ro'yxatga qo'shiladi.
   ─────────────────────────────────────────────────────────────────────
 */
-const FILIALLAR_QOLDA = [
-  {
-    id: "fl-03",
-    nomi: "Arzonchi — Sergeli filiali",
-    manzil: "",
-    telefon: "",
-    ishVaqti: "",
-    xaritaEmbed: "",
-    rasm: "",
-    holat: "ochilmagan"
-  }
-];
+const FILIALLAR_QOLDA = [];
 
 const FILIALLAR = FILIALLAR_AVTOMATIK.concat(FILIALLAR_QOLDA);

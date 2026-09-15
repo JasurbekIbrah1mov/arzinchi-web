@@ -162,16 +162,23 @@ document.addEventListener("DOMContentLoaded", function () {
   var karusel = document.getElementById("hero-karusel");
   var nuqtaTugmalar = joy.querySelectorAll(".hero-nuqta");
 
+  /* MUHIM (2026-09-13, ega ko'rsatmasi): "indeks * offsetWidth" bilan
+     scroll qilish xato edi — offsetWidth butun songa yaxlitlanadi, lekin
+     grid ustuni fraktsiyali (masalan 823.4px) bo'lishi mumkin. Farq har
+     slaydda to'planib, chetda oldingi slaydning bir bo'lagi + bo'sh
+     joy ko'rinib qolardi. Endi haqiqiy slayd elementining
+     `offsetLeft`iga scroll qilinadi — yaxlitlash xatosi yo'q. */
   for (var n = 0; n < nuqtaTugmalar.length; n++) {
     (function (indeks) {
       nuqtaTugmalar[indeks].addEventListener("click", function () {
-        karusel.scrollTo({ left: karusel.offsetWidth * indeks, behavior: "smooth" });
+        var maqsad = karusel.children[indeks];
+        if (maqsad) karusel.scrollTo({ left: maqsad.offsetLeft, behavior: "smooth" });
       });
     })(n);
   }
 
   karusel.addEventListener("scroll", function () {
-    var joriy = Math.round(karusel.scrollLeft / karusel.offsetWidth);
+    var joriy = engYaqinSlaydIndeksi(karusel);
     for (var k = 0; k < nuqtaTugmalar.length; k++) {
       nuqtaTugmalar[k].classList.toggle("hero-nuqta--faol", k === joriy);
     }
@@ -179,6 +186,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   avtoAylantir(karusel, REKLAMA_BANNERLARI.length, 5000);
 });
+
+/* Joriy scroll pozitsiyasiga eng yaqin turgan bola-elementning indeksi
+   (hero-karusel va avtoAylantir ikkalasi ham shundan foydalanadi —
+   offsetWidth ko'paytmasi emas, haqiqiy offsetLeft solishtiriladi). */
+function engYaqinSlaydIndeksi(karusel) {
+  var bolalar = karusel.children;
+  var eng = 0, kamMasofa = Infinity;
+  for (var i = 0; i < bolalar.length; i++) {
+    var masofa = Math.abs(bolalar[i].offsetLeft - karusel.scrollLeft);
+    if (masofa < kamMasofa) { kamMasofa = masofa; eng = i; }
+  }
+  return eng;
+}
 
 /* -----------------------------------------------------------------
    AVTOMATIK AYLANTIRGICH (umumiy) — scroll-snap karuseli uchun
@@ -194,9 +214,10 @@ function avtoAylantir(karusel, soni, oraliqMs) {
 
   function keyingi() {
     if (toxtatilgan || document.hidden) return;
-    var joriy = Math.round(karusel.scrollLeft / karusel.offsetWidth);
+    var joriy = engYaqinSlaydIndeksi(karusel);
     var keyingisi = (joriy + 1) % soni;
-    karusel.scrollTo({ left: karusel.offsetWidth * keyingisi, behavior: "smooth" });
+    var maqsad = karusel.children[keyingisi];
+    if (maqsad) karusel.scrollTo({ left: maqsad.offsetLeft, behavior: "smooth" });
   }
 
   function boshla() { if (!taymer) taymer = setInterval(keyingi, oraliqMs); }

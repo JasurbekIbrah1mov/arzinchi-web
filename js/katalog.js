@@ -14,6 +14,11 @@ var joriyNarxGacha = null;
 var joriyBrendlar = [];
 var brendKengaytirilgan = false;
 
+// Sahifalash (2026-09-13, ega qarori — DIZAYN.md 11-band):
+// "Yana ko'rsatish" o'rniga to'liq "Oldingi/Keyingi" sahifalash, 30 tadan.
+var SAHIFA_HAJM = 30;
+var joriySahifa = 1;
+
 document.addEventListener("DOMContentLoaded", function () {
   var grid = document.getElementById("mahsulot-grid");
   if (!grid) return;
@@ -55,6 +60,11 @@ document.addEventListener("DOMContentLoaded", function () {
   var urlSaralash = urlParametrlari.get("saralash");
   if (urlSaralash) joriySaralash = urlSaralash;
 
+  // Sahifa raqami URL'dan (masalan ?sahifa=3) — havolani ulashsa ham,
+  // sahifani yangilasa ham o'sha sahifa ochiladi
+  var urlSahifa = parseInt(urlParametrlari.get("sahifa"), 10);
+  if (!isNaN(urlSahifa) && urlSahifa >= 1) joriySahifa = urlSahifa;
+
   // Ikkala qidiruv maydonini boshlang'ich holatga sinxronlash
   if (joriyQidiruv) {
     var hInput = document.querySelector(".header-qidiruv input");
@@ -67,6 +77,26 @@ document.addEventListener("DOMContentLoaded", function () {
   if (saralashSelect0) saralashSelect0.value = joriySaralash;
   filtrlarniUla();
   qayta_chiz();
+
+  // Brauzer "orqaga/oldinga" tugmasi — sahifa/filtr URL'dan qayta o'qiladi
+  window.addEventListener("popstate", function () {
+    var p = new URLSearchParams(window.location.search);
+    joriyKategoriya = p.get("kategoriya") || "hammasi";
+    joriyQidiruv = p.get("q") || "";
+    joriySaralash = p.get("saralash") || "standart";
+    faqatAksiya = p.get("aksiya") === "1";
+    var s = parseInt(p.get("sahifa"), 10);
+    joriySahifa = (!isNaN(s) && s >= 1) ? s : 1;
+
+    var qidiruvMaydon = document.getElementById("qidiruv-input");
+    if (qidiruvMaydon) qidiruvMaydon.value = joriyQidiruv;
+    var headerInput = document.querySelector(".header-qidiruv input");
+    if (headerInput) headerInput.value = joriyQidiruv;
+    var saralashSelect = document.getElementById("saralash-select");
+    if (saralashSelect) saralashSelect.value = joriySaralash;
+
+    qayta_chiz();
+  });
 });
 
 // Mavjud kategoriyalar asosida filtr pill tugmalarini chizadi
@@ -88,6 +118,7 @@ function filtrTugmalariniChiz() {
   panel.querySelectorAll(".filtr-pill").forEach(function (tugma) {
     tugma.addEventListener("click", function () {
       joriyKategoriya = tugma.getAttribute("data-kategoriya");
+      joriySahifa = 1;   // filtr o'zgardi — 1-sahifaga qaytish (DIZAYN.md 11-band)
       qayta_chiz();
     });
   });
@@ -104,6 +135,7 @@ function boshqaruvElementlariniUlash() {
      yozay?" deb o'ylamaydi. */
   function qidiruvOzgardi(matn, boshqasi) {
     joriyQidiruv = matn;
+    joriySahifa = 1;   // filtr o'zgardi — 1-sahifaga qaytish
     if (boshqasi && boshqasi.value !== matn) boshqasi.value = matn;
     qayta_chiz();
   }
@@ -133,18 +165,20 @@ function boshqaruvElementlariniUlash() {
   if (saralashSelect) {
     saralashSelect.addEventListener("change", function () {
       joriySaralash = saralashSelect.value;
+      joriySahifa = 1;   // filtr o'zgardi — 1-sahifaga qaytish
       qayta_chiz();
     });
   }
 }
 
 // Uchala boshqaruv (kategoriya, qidiruv, saralash) shu bitta funksiya orqali BIRGA ishlaydi
-function qayta_chiz() {
+// `opsiyalar.sahifaAlmashdi` — true bo'lsa, pagination bosilgan (grid tepasiga
+// scroll qilinadi va URL'ga pushState — brauzer "orqaga" tugmasi ishlaydi).
+function qayta_chiz(opsiyalar) {
   var grid = document.getElementById("mahsulot-grid");
   var natijalarSoni = document.getElementById("natijalar-soni");
   if (!grid) return;
-
-  urlYangila();   // B5 — filtr holatini URL'ga yozish (ulashsa bo'ladigan havola)
+  var sahifaAlmashdi = !!(opsiyalar && opsiyalar.sahifaAlmashdi);
 
   // 1. Kategoriya bo'yicha filtr
   var natija = MAHSULOTLAR.filter(function (m) {
@@ -190,18 +224,20 @@ function qayta_chiz() {
     tugma.classList.toggle("faol", tugma.getAttribute("data-kategoriya") === joriyKategoriya);
   });
 
+  var jamiSoni = natija.length;   // filtrlangan JAMI — sahifadagi emas
   if (natijalarSoni) {
-    natijalarSoni.textContent = natija.length + " ta mahsulot topildi";
+    natijalarSoni.textContent = jamiSoni + " ta mahsulot topildi";
   }
 
   var eskiXabar = document.getElementById("bosh-holat-xabar");
   if (eskiXabar) eskiXabar.remove();
 
-  var yanaBlok = yanaBlokniTayyorla(grid);
+  var sahifalashBlok = sahifalashBlokniTayyorla(grid);
 
-  if (natija.length === 0) {
+  if (jamiSoni === 0) {
     grid.innerHTML = "";
-    yanaBlok.hidden = true;
+    sahifalashBlok.hidden = true;
+    urlYangila(sahifaAlmashdi ? "push" : "replace");
     var taxmin = joriyQidiruv ? taxminQil(joriyQidiruv) : null;
     var izoh = joriyQidiruv
       ? "«" + htmlXavfsiz(joriyQidiruv) + "» bo'yicha natija yo'q."
@@ -223,37 +259,101 @@ function qayta_chiz() {
     if (taxminBtn) taxminBtn.addEventListener("click", function () {
       qidiruvniQoy(taxminBtn.getAttribute("data-taxmin"));
     });
-  } else {
-    yanaBlok.hidden = false;
-    // T-1 YECHIMI: 273 mahsulot birdan emas, bo'lak-bo'lak chiziladi.
-    // Birinchi ko'rinishda 20 ta, keyin har bosishda +10 (Jasur aka talabi).
-    DOKON.yanaKorsatUla({
-      grid: grid,
-      royxat: natija,
-      boshlangich: 20,
-      qadam: 10,
-      tugma: yanaBlok.querySelector(".yana-tugma"),
-      hisoblagich: yanaBlok.querySelector(".yana-hisob")
-    });
+    return;
+  }
+
+  // — Sahifalash (2026-09-13, ega qarori — DIZAYN.md 11-band): 30 tadan —
+  var jamiSahifalar = Math.max(1, Math.ceil(jamiSoni / SAHIFA_HAJM));
+  if (joriySahifa > jamiSahifalar) joriySahifa = jamiSahifalar;
+  if (joriySahifa < 1) joriySahifa = 1;
+
+  urlYangila(sahifaAlmashdi ? "push" : "replace");
+
+  var boshlanishIndeks = (joriySahifa - 1) * SAHIFA_HAJM;
+  var sahifaNatija = natija.slice(boshlanishIndeks, boshlanishIndeks + SAHIFA_HAJM);
+
+  grid.innerHTML = sahifaNatija.map(mahsulotKartaHTML).join("");
+  DOKON.badgelarYangila();
+  DOKON.kartochkalarniUla(grid);
+  if (typeof revealniQaytaUla === "function") revealniQaytaUla(grid);
+
+  sahifalashBlok.hidden = false;
+  sahifalashBlok.innerHTML = sahifalashHTML(joriySahifa, jamiSahifalar);
+
+  if (sahifaAlmashdi) {
+    grid.scrollIntoView({ block: "start", behavior: "smooth" });
   }
 }
 
 /* -----------------------------------------------------------------
-   "YANA KO'RSATISH" BLOKI
-   Gridning ostiga bir marta yaratiladi (HTML fayllarni tahrirlash
-   shart bo'lmasligi uchun shu yerda quriladi).
+   SAHIFALASH BLOKI (2026-09-13, ega qarori — DIZAYN.md 11-band)
+   Gridning ostiga bir marta yaratiladi, keyin faqat innerHTML yangilanadi.
+   Klik hodisasi delegatsiya orqali ulanadi — har chizishda qayta ulash
+   shart emas.
 ------------------------------------------------------------------ */
-function yanaBlokniTayyorla(grid) {
-  var mavjud = document.getElementById("yana-blok");
+function sahifalashBlokniTayyorla(grid) {
+  var mavjud = document.getElementById("sahifalash-blok");
   if (mavjud) return mavjud;
-  var blok = document.createElement("div");
-  blok.id = "yana-blok";
-  blok.className = "yana-blok";
-  blok.innerHTML =
-    '<p class="yana-hisob"></p>' +
-    '<button type="button" class="yana-tugma">Yana ko\'rsatish</button>';
+  var blok = document.createElement("nav");
+  blok.id = "sahifalash-blok";
+  blok.className = "sahifalash";
+  blok.setAttribute("aria-label", "Sahifalash");
   grid.parentNode.insertBefore(blok, grid.nextSibling);
+
+  blok.addEventListener("click", function (hodisa) {
+    var maqsad = hodisa.target.closest("button");
+    if (!maqsad || maqsad.disabled) return;
+    if (maqsad.hasAttribute("data-sahifa-oldingi")) {
+      joriySahifa = Math.max(1, joriySahifa - 1);
+    } else if (maqsad.hasAttribute("data-sahifa-keyingi")) {
+      joriySahifa = joriySahifa + 1;
+    } else if (maqsad.hasAttribute("data-sahifa")) {
+      joriySahifa = parseInt(maqsad.getAttribute("data-sahifa"), 10) || 1;
+    } else {
+      return;
+    }
+    qayta_chiz({ sahifaAlmashdi: true });
+  });
+
   return blok;
+}
+
+// Joriy sahifa atrofida ±2 ta raqam + birinchi/oxirgi, qolgani "…" bilan
+// qisqartiriladi (DIZAYN.md 11-band: "1 2 3 … 8 9").
+function sahifaRaqamlariHisobla(joriy, jami) {
+  var royxat = [];
+  if (jami <= 7) {
+    for (var i = 1; i <= jami; i++) royxat.push(i);
+    return royxat;
+  }
+  royxat.push(1);
+  var boshlanish = Math.max(2, joriy - 2);
+  var tugash = Math.min(jami - 1, joriy + 2);
+  if (boshlanish > 2) royxat.push("...");
+  for (var j = boshlanish; j <= tugash; j++) royxat.push(j);
+  if (tugash < jami - 1) royxat.push("...");
+  royxat.push(jami);
+  return royxat;
+}
+
+function sahifalashHTML(joriy, jami) {
+  if (jami <= 1) return "";
+  var raqamlar = sahifaRaqamlariHisobla(joriy, jami);
+  var html = '<button type="button" class="sahifalash-oq" data-sahifa-oldingi' +
+    (joriy <= 1 ? " disabled" : "") + '>Oldingi</button>';
+  for (var i = 0; i < raqamlar.length; i++) {
+    var r = raqamlar[i];
+    if (r === "...") {
+      html += '<span class="sahifalash-nuqta" aria-hidden="true">&hellip;</span>';
+    } else {
+      html += '<button type="button" class="sahifalash-raqam' + (r === joriy ? " faol" : "") + '"' +
+        ' data-sahifa="' + r + '"' + (r === joriy ? ' aria-current="page"' : "") + '>' + r + "</button>";
+    }
+  }
+  html += '<button type="button" class="sahifalash-oq" data-sahifa-keyingi' +
+    (joriy >= jami ? " disabled" : "") + '>Keyingi</button>';
+  html += '<span class="sahifalash-korsatkich">Sahifa ' + joriy + " / " + jami + "</span>";
+  return html;
 }
 
 /* K11 — bo'sh holat harakatlari */
@@ -261,6 +361,7 @@ function filtrlarniTozala() {
   joriyKategoriya = "hammasi";
   joriyQidiruv = "";
   faqatAksiya = false;
+  joriySahifa = 1;
   var a = document.getElementById("qidiruv-input");
   if (a) a.value = "";
   var b = document.querySelector(".header-qidiruv input");
@@ -270,6 +371,7 @@ function filtrlarniTozala() {
 
 function qidiruvniQoy(matn) {
   joriyQidiruv = matn;
+  joriySahifa = 1;
   var a = document.getElementById("qidiruv-input");
   if (a) a.value = matn;
   var b = document.querySelector(".header-qidiruv input");
@@ -277,17 +379,25 @@ function qidiruvniQoy(matn) {
   qayta_chiz();
 }
 
-/* B5 — joriy filtr holatini URL'ga yozadi (replaceState — tarixni to'ldirmaydi).
-   Natija: havolani ulashsa/saqlasa o'sha filtr ochiladi, "orqaga" ishlaydi. */
-function urlYangila() {
+/* B5 — joriy filtr+sahifa holatini URL'ga yozadi.
+   `rejim === "push"` — pushState (pagination klik: brauzer "orqaga"
+   tugmasi oldingi sahifaga qaytaradi). Aks holda replaceState (filtr/
+   qidiruv o'zgarganda — har harfda tarixni to'ldirmaslik uchun). */
+function urlYangila(rejim) {
   try {
     var p = new URLSearchParams();
     if (joriyKategoriya && joriyKategoriya !== "hammasi") p.set("kategoriya", joriyKategoriya);
     if (joriyQidiruv && joriyQidiruv.trim()) p.set("q", joriyQidiruv.trim());
     if (joriySaralash && joriySaralash !== "standart") p.set("saralash", joriySaralash);
     if (faqatAksiya) p.set("aksiya", "1");
+    if (joriySahifa > 1) p.set("sahifa", String(joriySahifa));
     var qatorb = p.toString();
-    window.history.replaceState(null, "", window.location.pathname + (qatorb ? "?" + qatorb : ""));
+    var yangiURL = window.location.pathname + (qatorb ? "?" + qatorb : "");
+    if (rejim === "push") {
+      window.history.pushState(null, "", yangiURL);
+    } else {
+      window.history.replaceState(null, "", yangiURL);
+    }
   } catch (e) { /* eski brauzer — URL yangilanmaydi, sayt baribir ishlaydi */ }
 }
 
@@ -323,6 +433,7 @@ function brendlarniChiz(baza) {
       var idx = joriyBrendlar.indexOf(nom);
       if (this.checked && idx < 0) joriyBrendlar.push(nom);
       else if (!this.checked && idx >= 0) joriyBrendlar.splice(idx, 1);
+      joriySahifa = 1;   // filtr o'zgardi — 1-sahifaga qaytish
       qayta_chiz();
     });
   }
