@@ -74,7 +74,8 @@ select {
 
   /* Neytral shkala — ozgina sovuq (texnika do'koni hissi, Uzum saboqi) */
   --kul-10:   #0E0F12;
-  --kul-15:   #141417;   /* ★ asosiy matn, quyuq bo'lim, footer */
+  --kul-15:   #0E0E10;   /* ★ asosiy matn, quyuq bo'lim, footer — YANGILANDI T0 (2026-09-15):
+                            eski #141417 dan (ARXITEKTORDAN-DASTURCHIGA-YANGI-TIL-TZ.md §5 A.1) */
   --kul-25:   #26282E;
   --kul-35:   #45474F;
   --kul-55:   #696D75;   /* ★ ikkinchi darajali matn — eski #6C6D75 kulrang
@@ -87,9 +88,12 @@ select {
   --kul-90:   #E3E5EA;   /* chegara */
   --kul-94:   #EDEFF3;   /* kulrang yo'lakcha — tema tugmasi, neytral yorliq
                             (eski #EDEEF2 — TZ 01 §1.1 o'lchoviga keltirildi) */
-  --kul-96:   #F1F3F6;   /* ★ sahifa foni (TZ 01 §1.1 o'lchovi) */
+  --kul-96:   #F1F3F6;   /* eski sahifa foni edi — T0 dan keyin --yuza-sahifa endi --kul-100
+                            (oq) ga bog'langan; --kul-96 ning o'zi ataylab o'chirilmadi
+                            (.bosh-holat-ikonka fonida to'g'ridan-to'g'ri ishlatiladi) */
   --kul-97:   #F4F6F8;   /* yuza-ichki (ikkilamchi blok, stepper) — TZ */
-  --kul-98:   #FAFBFC;   /* yuza-yumshoq (zebra, bo'sh holat) — TZ (eski #F8F9FB) */
+  --kul-98:   #FAF9F9;   /* yuza-yumshoq (zebra, bo'sh holat) — YANGILANDI T0: eski #FAFBFC dan
+                            (TZ 01-TOKENLAR.md §1.4 o'lchovi, "deyarli bir xil" almashtirish) */
   --kul-100:  #FFFFFF;   /* ★ kartochka/sirt */
 
   /* Yordamchi — FAQAT yorliqlar uchun (qizil byudjetini yemasin) */
@@ -118,11 +122,17 @@ select {
   /* Komponentlar FAQAT shu qatlamni ishlatadi.                            */
 
   /* — Yuzalar: chuqurlik soya bilan emas, POG'ONA bilan (Material 3 saboqi) */
-  --yuza-sahifa:      var(--kul-96);   /* <body> */
+  --yuza-sahifa:      var(--kul-100);  /* <body> — YANGILANDI T0: eski kulrang sahifa foni
+                                          dan oqqa (TZ §5 A.2, "kulrang sahifa foni yo'q" talabi).
+                                          --kul-96 ning o'zi tegilmadi — boshqa
+                                          joyda (.bosh-holat-ikonka) to'g'ridan-to'g'ri ishlatiladi. */
   --yuza-karta:       var(--kul-100);  /* kartochka, panel */
-  --yuza-ikkilamchi:  var(--kul-97);   /* ichki blok — #F4F6F8 (TZ yuza-ichki) */
-  --yuza-yumshoq:     var(--kul-98);   /* #FAFBFC — zebra, bo'sh holat (TZ) */
-  --yuza-uchinchi:    var(--kul-94);   /* rasm o'rni, skeleton */
+  --yuza-ikkilamchi:  var(--yuza-kulrang);  /* TAXMIN T0: eski #F4F6F8 -> yangi --yuza-kulrang
+                                          #F2F0F0 (TZ §5 A.4, §9-taxmin 3 — yangi tilda alohida
+                                          "ikkilamchi yuza" yo'q, eng yaqini shu) */
+  --yuza-yumshoq:     var(--kul-98);   /* #FAF9F9 — zebra, bo'sh holat (TZ) */
+  --yuza-uchinchi:    var(--yuza-kulrang);  /* TAXMIN T0: eski #EDEFF3 -> --yuza-kulrang
+                                          #F2F0F0, xuddi shu sabab (TZ §5 A.4) */
   --yuza-quyuq:       var(--kul-15);   /* footer, quyuq bo'lim */
 
   /* — Matn (har fon uchun "on-" jufti bor — kontrast avtomatik to'g'ri) */
@@ -166,9 +176,15 @@ select {
 
   /* — Yorliqlar (badge) */
   --yorliq-yangi-fon:    var(--kul-15);    --yorliq-yangi-matn:    var(--kul-100);
-  --yorliq-xit-fon:      var(--qizil-97);  --yorliq-xit-matn:      var(--qizil-45);  /* 4.37->5.70 AA (TZ 01) */
-  --yorliq-kam-fon:      var(--sariq-50);  --yorliq-kam-matn:      var(--kul-15);
-  --yorliq-yoq-fon:      var(--kul-94);    --yorliq-yoq-matn:      var(--kul-65);
+  /* XIT — YANGILANDI T0: fon endi to'ldirilgan qizil + oq matn, eski
+     ochiq-qizil-tint/to'q-qizil-matn EMAS (02-KOMPONENTLAR.md §2 jadvali) */
+  --yorliq-xit-fon:      var(--qizil-50);  --yorliq-xit-matn:      var(--matn-teskari);
+  /* KAM QOLDI — YANGILANDI T0: sariq fon -> qora fon + oq matn — EGA KO'RADI
+     (Dizayner qarori, 02-KOMPONENTLAR.md §2, TZ §5 A.4-band 7) */
+  --yorliq-kam-fon:      var(--qora);      --yorliq-kam-matn:      var(--matn-teskari);
+  /* YOQ ("mavjud emas") — YANGILANDI T0: --yuza-kulrang/--matn-yoq
+     (02-KOMPONENTLAR.md §2 jadvali, TZ §5 A.4-band 8) */
+  --yorliq-yoq-fon:      var(--yuza-kulrang);  --yorliq-yoq-matn:      var(--matn-yoq);
 
   /* "Mavjud emas" — brend qizildan ATAYLAB farqli, neytral grafit (band 9) */
   --rang-mavjud-emas:      var(--kul-65);
@@ -232,7 +248,9 @@ select {
   /* — Chegara: 2 → 7 daraja (TZ 01 §2) */
   --chegara-ichki:   1px solid #EEF0F3;            /* ajratgich, jadval qatori */
   --chegara-bolim:   1px solid #E4E7EC;            /* header/footer ajratgichi */
-  --chegara-belgi:   1.5px solid #C6CBD3;          /* bo'sh checkbox/radio */
+  --chegara-belgi:   1.5px solid #8C8A8A;          /* bo'sh checkbox/radio — YANGILANDI T0:
+                                          eski #C6CBD3 (WCAG 1.4.11 3:1 ni o'tmasdi) dan;
+                                          yangi qiymat 3.43:1 (TZ §5 A.3, 01-TOKENLAR.md §1.5) */
   --chegara-faol:    1.5px solid var(--qizil-50);  /* tanlangan maydon, stepper */
   --chegara-qora:    1.5px solid var(--kul-15);    /* tanlangan variant chipi */
 
@@ -258,33 +276,49 @@ select {
   --radius-8:  8px;   --radius-9:  9px;    --radius-10: 10px;
   --radius-11: 11px;  --radius-14: 14px;   --radius-18: 18px;  --radius-22: 22px;
 
-  /* — TZ nomli ko'priklar: TZ matnidagi nomlar bevosita ishlasin
-       (TZ §8: "DIZAYN.md — qonun, TZ nomlari faqat o'qish uchun") */
-  --qizil:        var(--qizil-50);
-  --qizil-matn:   var(--qizil-45);
-  --qizil-hover:  var(--qizil-40);
-  --qizil-tint:   var(--qizil-96);
-  --matn-1:       var(--matn-asosiy-rang);
-  --matn-2:       var(--matn-ikkinchi);
-  --matn-3:       #55585F;
-  --matn-bosh:    var(--kul-58);
-  --matn-teskari: var(--matn-qizil-ustida);
-  --yuza-ichki:   var(--yuza-ikkilamchi);
-  --yuza-yolak:   var(--kul-94);
-  --yuza-qora:    var(--kul-15);
-  --chg-ichki:    var(--chegara-ichki);
-  --chg-tashqi:   1px solid #DDE1E7;
-  --chg-kuchli:   1.5px solid #DDE1E7;
-  --chg-bolim:    var(--chegara-bolim);
-  --chg-belgi:    var(--chegara-belgi);
-  --chg-faol:     var(--chegara-faol);
-  --chg-qora:     var(--chegara-qora);
-  --r-dumaloq:    999px;
-  --r-katta:      16px;
-  --r-orta:       12px;
-  --r-kichik:     11px;
-  --r-mayda:      9px;
-  --r-yorliq:     6px;
+  /* — TZ nomli ko'priklar: 01-TOKENLAR.md §8 dagi ANIQ nomlar bilan T0
+       (2026-09-15) da QAYTA YOZILDI (patch emas) — ARXITEKTORDAN-
+       DASTURCHIGA-YANGI-TIL-TZ.md §3 4-qator shuni buyurgan: eski
+       taxminiy nomlar (--qizil-matn/-hover/-tint, --matn-3, --matn-bosh,
+       --yuza-ichki, --yuza-yolak, --chg-*, --r-katta/-orta/-kichik(11)/
+       -mayda/-yorliq) loyihaning boshqa hech qayerida (js/html/ilova.css)
+       ishlatilmagan edi (grep bilan tasdiqlandi) — shu sabab xavfsiz
+       almashtirildi, hech narsa buzilmaydi.
+       ⚠️ FAQAT rang (A) va radius/oraliq/balandlik (B) qismi — shrift
+       (--f-*) va soya (C/D bosqichi) BU YERGA QO'SHILMADI, chunki bu T0
+       ishi faqat A+B doirasida (Menejer topshirig'i). */
+  --qizil:          var(--qizil-50);      /* #E60012 — aynan bir xil */
+  --qizil-yuza:     var(--qizil-97);      /* #FFF1F2 — aynan bir xil, nom-alias (TZ §5 A.4) */
+  --qizil-och:      #FF4D5A;              /* YANGI T0: FAQAT --qora fonda — logotip nuqtasi,
+                                              qora kartadagi urg'u (TZ §5 A.3, 01-TOKENLAR §1.2) */
+  --matn-1:         var(--matn-asosiy-rang);  /* #0E0E10 (--kul-15 T0 da yangilandi) */
+  --matn-2:         #6A6A6C;              /* YANGI T0 qiymat — ikkilamchi matn (TZ 01 §1.3) */
+  --matn-teskari:   var(--matn-qizil-ustida); /* #FFFFFF — qizil/qora yuza ustida */
+  --matn-yoq:       #B6B4B4;              /* YANGI T0: faqat o'chirilgan holat — TUZATMANG
+                                              (WCAG 1.4.3 dan ozod, 01-TOKENLAR §1.7) */
+  --yuza-kulrang:   #F2F0F0;              /* YANGI T0: o'chirilgan tugma, "Topshirildi" yorlig'i,
+                                              xarita fon (01-TOKENLAR §1.4) */
+  --yuza-qora:      var(--kul-15);        /* footer/quyuq bo'lim foni */
+  --chiziq:         #EAE7E7;              /* YANGI T0: kartochka chegarasi, ajratgich */
+  --chiziq-belgi:   #8C8A8A;              /* YANGI T0: bo'sh checkbox/radio — WCAG 1.4.11 (3:1) */
+  --chiziq-och:     #DEDBDB;              /* YANGI T0: o'chgan switch yo'lakchasi, nuqta */
+  --chiziq-punktir: #D8D4D4;              /* YANGI T0: bo'sh holat ramkasi (1px dashed) */
+  /* — Radius: oltita pog'ona (B bosqichi, TZ §5 B.1) */
+  --r-mikro:        4px;                  /* YANGI T0 — yo'q edi */
+  --r-kichik:       10px;
+  --r-boshqaruv:    14px;
+  --r-karta:        18px;
+  --r-panel:        22px;
+  --r-dumaloq:      999px;
+  /* — Oraliq: yettita pog'ona (B bosqichi, TZ §5 B.4) */
+  --o-1: 4px;  --o-2: 8px;  --o-3: 12px; --o-4: 16px;
+  --o-5: 24px; --o-6: 32px; --o-7: 40px;
+  /* — Boshqaruv balandligi (B bosqichi, TZ §5 B.3 — token TAYYORLANADI,
+       .tugma balandligiga hali ULANMAYDI — bu B2 komponent ishi) */
+  --b-kichik: 44px; --b-asosiy: 52px; --b-katta: 56px;
+  /* — Sahifa chekkasi / ichki kenglik (B bosqichi, TZ §5 B.4 — token
+       TAYYORLANADI, .konteyner ga hali ULANMAYDI) */
+  --chekka: 40px;  --chekka-mobil: 18px;  --ich: 1200px;
 
   /* ═══════════ KO'CHISH KO'PRIGI (eski nomlar — vaqtinchalik) ═══════════ */
   /* Mavjud style.css eski nomlarni ishlatadi. Ularni birdan olib tashlasak
@@ -454,7 +488,10 @@ p {
 
 .tugma-asosiy[disabled],
 .tugma-asosiy:disabled {
-  background: var(--kul-94); color: #A8ADB5;
+  /* YANGILANDI T0: eski var(--kul-94)+#A8ADB5 -> --yuza-kulrang/--matn-yoq
+     (01-TOKENLAR.md §1.7: "o'chirilgan tugma foni: --yuza-kulrang",
+     TZ §5 A.5 — komponent ichidagi qattiq hex tokenga almashtirildi) */
+  background: var(--yuza-kulrang); color: var(--matn-yoq);
   cursor: not-allowed; transform: none; box-shadow: none;
 }
 
@@ -2114,7 +2151,10 @@ p {
   border-radius: var(--radius-yorliq);
 }
 
-.yorliq--chegirma { background: var(--yorliq-yangi-fon); color: var(--yorliq-yangi-matn); }
+/* Chegirma yorlig'i ("-18%") XIT bilan bir xil qizil token ishlatadi —
+   02-KOMPONENTLAR.md:105 jadvali (Nazoratchi 15.09 topgan xato tuzatildi,
+   eski qator qora --yorliq-yangi-fon ga bog'langan edi). */
+.yorliq--chegirma { background: var(--yorliq-xit-fon); color: var(--yorliq-xit-matn); }
 .yorliq--kam      { background: var(--yorliq-kam-fon);   color: var(--yorliq-kam-matn); }
 .yorliq--xit      { background: var(--yorliq-xit-fon);   color: var(--yorliq-xit-matn); }
 .yorliq--yoq      { background: var(--yorliq-yoq-fon);   color: var(--yorliq-yoq-matn); }
@@ -2789,8 +2829,9 @@ body.modal-ochiq { overflow: hidden; }
 .bosh-holat {
   text-align: center;
   padding: 26px 20px;
-  background: var(--kul-98);            /* #FAFBFC — TZ §11 */
-  border: 1px dashed #D3D8DF;
+  background: var(--kul-98);            /* #FAF9F9 — TZ §11, T0 da yangilandi */
+  border: 1px dashed var(--chiziq-punktir);  /* YANGILANDI T0: eski #D3D8DF -> yangi til
+                                                 "bo'sh holat ramkasi" (01-TOKENLAR §1.5) */
   border-radius: var(--radius-14);
 }
 
@@ -3731,7 +3772,7 @@ html {
   max-width: 614px;
   z-index: 200;
   background: var(--yuza-karta);
-  border: 1px solid #DDE1E7;
+  border: 1px solid var(--chiziq);  /* YANGILANDI T0: eski #DDE1E7 -> yangi til chizig'i */
   border-radius: 0 0 14px 14px;
   box-shadow: 0 18px 44px rgba(20, 20, 23, 0.16);
   padding: var(--oraliq-2) 0;
@@ -3740,7 +3781,7 @@ html {
 }
 
 .qd-bolim + .qd-bolim,
-.qd-barcha { border-top: 1px solid #EEF0F3; }
+.qd-barcha { border-top: 1px solid var(--chiziq); }  /* YANGILANDI T0: eski #EEF0F3 */
 .qd-bolim + .qd-bolim { margin-top: 6px; padding-top: 6px; }
 
 .qd-sarlavha {
@@ -3772,7 +3813,8 @@ html {
 .qd-rasm {
   flex: 0 0 auto; width: 44px; height: 44px;
   display: grid; place-items: center; overflow: hidden;
-  background: var(--yuza-uchinchi); border-radius: var(--radius-9);
+  background: var(--yuza-uchinchi); border-radius: var(--r-kichik);  /* YANGILANDI T0:
+    9px shkaladan tashqari edi -> eng yaqin yangi pog'ona 10px (TZ §5 B.2, TAXMIN) */
 }
 .qd-rasm img { width: 100%; height: 100%; object-fit: contain; }
 .qd-nom {
@@ -3856,7 +3898,7 @@ html {
   padding: 5px 10px; border-radius: var(--radius-yorliq);
 }
 .hero-slayd h2 {
-  color: #FFFFFF; font-size: 40px; font-weight: 800; line-height: 1.04;
+  color: var(--matn-teskari); font-size: 40px; font-weight: 800; line-height: 1.04;
   letter-spacing: -0.032em; margin: 14px 0 10px;
 }
 .hero-slayd p {
@@ -3866,7 +3908,7 @@ html {
 .hero-slayd-tugma {
   display: inline-flex; align-items: center; gap: 6px;
   height: 46px; padding: 0 22px; border-radius: var(--radius-tugma);
-  background: var(--qizil-50); color: #FFFFFF; font-size: 14.5px; font-weight: 700;
+  background: var(--qizil-50); color: var(--matn-teskari); font-size: 14.5px; font-weight: 700;
 }
 .hero-slayd-rasm {
   position: absolute; right: 30px; bottom: -18px;
@@ -3908,7 +3950,7 @@ html {
 }
 .hero-taklif-havola:hover { text-decoration: underline; }
 .hero-yetkazish {
-  background: var(--kul-15); color: #FFFFFF;
+  background: var(--kul-15); color: var(--matn-teskari);
   border-radius: var(--radius-kartochka); padding: 16px 18px;
   display: flex; flex-direction: column; gap: 3px;
 }
@@ -3948,7 +3990,7 @@ html {
 .kabinet-avatar {
   flex: 0 0 auto; width: 48px; height: 48px; border-radius: var(--radius-chip);
   display: grid; place-items: center;
-  background: var(--kul-15); color: #fff; font-size: var(--matn-h3); font-weight: 800;
+  background: var(--kul-15); color: var(--matn-teskari); font-size: var(--matn-h3); font-weight: 800;
 }
 .kabinet-sarlavha { margin: 0 0 var(--oraliq-3); font-size: var(--matn-h4); }
 .kabinet-royxat { display: flex; flex-direction: column; gap: var(--oraliq-2); }
@@ -3974,7 +4016,7 @@ html {
 /* ── 1. Xizmat qatori (eng tepa, 36px) ── */
 .xizmat-qatori {
   background: var(--yuza-karta);
-  border-bottom: 1px solid #E4E7EC;
+  border-bottom: 1px solid var(--chiziq);  /* YANGILANDI T0: eski #E4E7EC */
   font-size: 12px;
   color: var(--kul-58);
 }
@@ -4013,7 +4055,8 @@ html {
 }
 .header-ichki .header-qidiruv input[type="search"] {
   flex: 1 1 auto; height: 44px; padding: 0 15px; font-size: 13.5px;
-  border: 1px solid var(--kul-88); border-right: 0;
+  border: 1px solid var(--chiziq); border-right: 0;  /* YANGILANDI T0: --kul-88 aniqlanmagan
+    token edi (grep bilan topildi, fallbacksiz — border butunlay ko'rinmas edi) */
   border-radius: var(--radius-tugma) 0 0 var(--radius-tugma);
   background: var(--yuza-karta); color: var(--matn-asosiy-rang); min-width: 0;
 }
@@ -4038,12 +4081,12 @@ html {
 .header-ong .dokon-badge {
   position: absolute; top: -5px; right: 1px;
   min-width: 17px; height: 17px; padding: 0 4px;
-  background: var(--qizil-50); color: #fff; border-radius: 999px;
+  background: var(--qizil-50); color: var(--matn-teskari); border-radius: 999px;
   font-size: 10px; font-weight: 700; display: grid; place-items: center;
 }
 
 /* ── 3. Kategoriya qatori (header ostida, 44px) ── */
-.kategoriya-qatori { background: var(--yuza-karta); border-top: 1px solid #EEF0F3; }
+.kategoriya-qatori { background: var(--yuza-karta); border-top: 1px solid var(--chiziq); }  /* YANGILANDI T0: eski #EEF0F3 */
 .kategoriya-ichki {
   height: 44px; display: flex; align-items: center; gap: 24px;
   font-size: 13.5px; overflow-x: auto; scrollbar-width: none;
@@ -4057,7 +4100,7 @@ html {
 /* ── 5. Footer — OQ, bir qatorli (Dizayner) ── */
 .sayt-footer--yangi {
   margin-top: 28px; background: var(--yuza-karta);
-  border-top: 1px solid #E4E7EC; color: var(--kul-58);
+  border-top: 1px solid var(--chiziq); color: var(--kul-58);  /* YANGILANDI T0: eski #E4E7EC */
 }
 .footer-yangi-ichki {
   display: flex; align-items: center; justify-content: space-between;
@@ -4092,7 +4135,7 @@ html {
   display: flex; align-items: center; gap: 12px; justify-content: center;
   padding: 0 12px;
 }
-.ishonch-katak:not(:last-child) { border-right: 1px solid #EEF0F3; }
+.ishonch-katak:not(:last-child) { border-right: 1px solid var(--chiziq); }  /* YANGILANDI T0: eski #EEF0F3 */
 .ishonch-katak svg { flex: 0 0 auto; width: 24px; height: 24px; stroke: var(--matn-qizil); }
 .ishonch-katak b { display: block; font-size: 13.5px; font-weight: 700; }
 .ishonch-katak span { font-size: 12px; color: var(--matn-ikkinchi); }
@@ -4118,12 +4161,14 @@ html {
 .filtr-yon-sarlavha { font-size: 15px; font-weight: 800; }
 .filtr-tozala { border: 0; background: none; color: var(--matn-qizil); font-size: 12.5px; font-weight: 600; cursor: pointer; }
 .filtr-tozala:hover { text-decoration: underline; }
-.filtr-blok { border-top: 1px solid #EEF0F3; padding: 14px 0; }
+.filtr-blok { border-top: 1px solid var(--chiziq); padding: 14px 0; }  /* YANGILANDI T0: eski #EEF0F3 */
 .filtr-blok-sarlavha { font-size: 13.5px; font-weight: 700; margin-bottom: 8px; }
 .filtr-narx { display: flex; gap: 8px; }
 .filtr-narx input {
   flex: 1 1 0; min-width: 0; height: 36px; padding: 0 10px; font-size: 12.5px;
-  border: 1px solid var(--kul-88); border-radius: var(--radius-9);
+  /* YANGILANDI T0: --kul-88 aniqlanmagan token edi (border ko'rinmas edi);
+     radius 9px shkaladan tashqari -> eng yaqin 10px (TZ §5 B.2, TAXMIN) */
+  border: 1px solid var(--chiziq); border-radius: var(--r-kichik);
   background: var(--yuza-karta); color: var(--matn-asosiy-rang);
 }
 .filtr-narx input:focus { outline: none; border-color: var(--qizil-50); }
@@ -4178,7 +4223,7 @@ html {
   .filtr-korish {
     display: block; width: 100%; height: 48px; margin-top: 14px;
     border: none; border-radius: var(--radius-tugma); cursor: pointer;
-    background: var(--qizil-50); color: #fff; font-size: 14.5px; font-weight: 700;
+    background: var(--qizil-50); color: var(--matn-teskari); font-size: 14.5px; font-weight: 700;
   }
   .filtr-fon {
     display: block;
@@ -4351,7 +4396,7 @@ html {
 
 .sotib-nasiya {
   margin-top: var(--oraliq-4);
-  background: #FFF7E8;
+  background: var(--nasiya-fon);  /* YANGILANDI T0: eski #FFF7E8 endi token */
   border-radius: 12px;
   padding: 12px;
 }
@@ -4360,16 +4405,16 @@ html {
   align-items: baseline;
   justify-content: space-between;
   font-size: var(--matn-kichik);
-  color: #6B5320;
+  color: var(--nasiya-matn);
 }
 .sotib-nasiya .sn-hisob {
   background: none; border: none; padding: 0; cursor: pointer;
-  font: inherit; font-size: 0.75rem; font-weight: 700; color: #6B5320;
+  font: inherit; font-size: 0.75rem; font-weight: 700; color: var(--nasiya-matn);
   text-decoration: underline;
 }
 .sotib-nasiya .sn-oylik { font-size: 1.15rem; font-weight: 800; margin-top: 2px; color: var(--qora); }
 .sotib-nasiya .sn-oylik span { font-size: var(--matn-kichik); font-weight: 600; }
-.sotib-nasiya .sn-izoh { font-size: 0.72rem; color: #6B5320; margin-top: 2px; }
+.sotib-nasiya .sn-izoh { font-size: 0.72rem; color: var(--nasiya-matn); margin-top: 2px; }
 .nasiya-toliq { margin-top: var(--oraliq-3); }
 
 .sotib-karta .sk-savat {
@@ -4618,15 +4663,15 @@ html {
   color: var(--matn-ikkinchi);
   white-space: nowrap;
 }
-.checkout-qadam .cq-faol .cq-belgi { background: var(--qizil-50); color: #fff; }
+.checkout-qadam .cq-faol .cq-belgi { background: var(--qizil-50); color: var(--matn-teskari); }
 .checkout-qadam .cq-faol .cq-matn { color: var(--qora); font-weight: 700; }
-.checkout-qadam .cq-tugadi .cq-belgi { background: var(--yashil-45); color: #fff; }
+.checkout-qadam .cq-tugadi .cq-belgi { background: var(--yashil-45); color: var(--matn-teskari); }
 .checkout-qadam .cq-tugadi .cq-matn { color: var(--qora); font-weight: 600; }
 .checkout-qadam .cq-chiziq {
   flex: 1 1 20px;
   min-width: 16px;
   height: 1.5px;
-  background: var(--kul-88, #E4E7EC);
+  background: var(--chiziq);  /* YANGILANDI T0: --kul-88 aniqlanmagan edi, fallback #E4E7EC har doim ishlatilardi */
   margin: 0 12px;
 }
 .checkout-qadam .cq-chiziq--tugadi { background: var(--yashil-45); }
@@ -4716,7 +4761,7 @@ html {
   position: absolute;
   inset: 5px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--oq);
 }
 .checkout-variant:has(input:checked) {
   border-color: var(--qizil-50);
@@ -4841,7 +4886,7 @@ html {
   border: 2px solid var(--kul-85);
   display: grid;
   place-items: center;
-  color: #fff;
+  color: var(--matn-teskari);
 }
 .td-timeline .td-tl-belgi.tugadi { background: var(--yashil-45); border-color: var(--yashil-45); }
 .td-timeline .td-tl-matn b { display: block; font-size: 0.8rem; font-weight: 700; }
