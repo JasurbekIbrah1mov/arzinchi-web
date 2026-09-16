@@ -1,0 +1,475 @@
+/* =======================================================================
+   KABINET.CSS — kabinet.html sahifasiga xos uslublar
+   =======================================================================
+   css/style.css ga HECH NARSA yozilmagan (umumiy fayl — TEGMA qoidasi).
+   Faqat shu yerdagi qoidalar — barchasi css/style.css dagi var(--...)
+   tokenlaridan foydalanadi (T0 migratsiyasi ranglari/radius/oraliq).
+
+   Ega talabi (16.09): premium ko'rinish — keng/havodor tartib, faol
+   buyurtma bloki TO'Q fon, yirik raqam/kod, yumshoq soyalar, katta
+   radius, aniq ierarxiya.
+   ======================================================================= */
+
+/* -----------------------------------------------------------------
+   0. UMUMIY — kartalar, sarlavha, kichik izoh
+------------------------------------------------------------------ */
+.kab-sarlavha {
+  margin-bottom: var(--oraliq-6);
+}
+.kab-sarlavha h1 {
+  margin: 0;
+}
+
+.kab-karta {
+  background: var(--yuza-karta);
+  border-radius: var(--r-panel);
+  box-shadow: var(--soya-karta);
+  padding: var(--oraliq-6);
+  margin-bottom: var(--oraliq-5);
+}
+
+.kab-karta-sarlavha {
+  margin: 0 0 var(--oraliq-4);
+  font-size: var(--matn-h4);
+}
+
+.kab-mayda-izoh {
+  font-size: var(--matn-kichik);
+  color: var(--matn-uchinchi);
+  margin: var(--oraliq-2) 0 var(--oraliq-4);
+  line-height: 1.5;
+}
+.kab-mayda-izoh--oq {
+  color: var(--matn-quyuq-ustida-2);
+  margin: 0;
+}
+
+.kab-ajratgich {
+  border: none;
+  border-top: var(--chegara-ichki);
+  margin: var(--oraliq-5) 0;
+}
+
+/* -----------------------------------------------------------------
+   1. YUKLANMOQDA / KIRMAGAN HOLAT
+------------------------------------------------------------------ */
+.kab-yuklanmoqda {
+  padding: var(--oraliq-8) var(--oraliq-4);
+  text-align: center;
+  color: var(--matn-ikkinchi);
+}
+
+.kab-spinner {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto var(--oraliq-4);
+  border-radius: 50%;
+  border: 3px solid var(--chegara-nozik);
+  border-top-color: var(--qizil-50);
+  animation: kab-aylanish 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kab-spinner { animation: none; }
+}
+
+@keyframes kab-aylanish {
+  to { transform: rotate(360deg); }
+}
+
+.kab-kirmagan-karta {
+  max-width: 440px;
+  margin: var(--oraliq-7) auto;
+  text-align: center;
+  padding: var(--oraliq-7) var(--oraliq-6);
+}
+.kab-kirmagan-karta svg {
+  color: var(--matn-qizil);
+  margin-bottom: var(--oraliq-3);
+}
+.kab-kirmagan-karta h1 {
+  margin: 0 0 var(--oraliq-2);
+}
+.kab-kirmagan-karta .tugma {
+  margin-top: var(--oraliq-4);
+}
+
+/* -----------------------------------------------------------------
+   2. BANNER (server bilan bog'lanish muammosi)
+------------------------------------------------------------------ */
+.kab-banner {
+  border-radius: var(--r-boshqaruv);
+  padding: var(--oraliq-4);
+  margin-bottom: var(--oraliq-5);
+  font-size: var(--matn-asosiy);
+}
+.kab-banner--ogoh {
+  background: var(--ogoh-fon);
+  color: var(--ogoh-matn);
+}
+
+/* -----------------------------------------------------------------
+   3. FAOL BUYURTMA — eng muhim blok, TO'Q fon, premium
+------------------------------------------------------------------ */
+.kab-faol {
+  background: var(--yuza-qora);
+  color: var(--matn-quyuq-ustida);
+  border-radius: var(--radius-blok);
+  padding: var(--oraliq-7) var(--oraliq-6);
+  margin-bottom: var(--oraliq-6);
+  box-shadow: var(--soya-hover);
+}
+
+.kab-faol--bosh {
+  text-align: center;
+  padding: var(--oraliq-8) var(--oraliq-6);
+}
+.kab-faol--bosh h2 {
+  margin: 0 0 var(--oraliq-2);
+  color: var(--matn-quyuq-ustida);
+}
+.kab-faol--bosh p {
+  color: var(--matn-quyuq-ustida-2);
+  margin: 0 0 var(--oraliq-5);
+}
+
+.kab-faol-bosh {
+  margin-bottom: var(--oraliq-5);
+}
+.kab-faol-yorliq {
+  display: inline-block;
+  font-size: var(--matn-yorliq);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--qizil-och);
+  margin-bottom: var(--oraliq-2);
+}
+.kab-faol-bosh h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--matn-quyuq-ustida);
+}
+
+/* Holat bosqichlari */
+.kab-bosqichlar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--oraliq-2);
+  margin: var(--oraliq-6) 0;
+}
+.kab-bosqich {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--oraliq-2);
+  position: relative;
+}
+.kab-bosqich::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.18);
+  z-index: 0;
+}
+.kab-bosqich:first-child::before {
+  display: none;
+}
+.kab-bosqich-nuqta {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 1;
+  flex: none;
+}
+.kab-bosqich-nom {
+  font-size: 11px;
+  color: var(--matn-quyuq-ustida-2);
+  line-height: 1.3;
+}
+.kab-bosqich--otgan .kab-bosqich-nuqta,
+.kab-bosqich--joriy .kab-bosqich-nuqta {
+  background: var(--qizil-och);
+  border-color: var(--qizil-och);
+}
+.kab-bosqich--otgan::before {
+  background: var(--qizil-och);
+}
+.kab-bosqich--otgan .kab-bosqich-nom,
+.kab-bosqich--joriy .kab-bosqich-nom {
+  color: var(--matn-quyuq-ustida);
+  font-weight: 700;
+}
+.kab-bosqich--joriy .kab-bosqich-nuqta {
+  box-shadow: 0 0 0 4px rgba(255, 77, 90, 0.28);
+}
+
+.kab-bekor-belgi {
+  margin: var(--oraliq-5) 0;
+  padding: var(--oraliq-4);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-kichik);
+  color: var(--matn-quyuq-ustida-2);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Pastki qism: qachon / punkt / olish kodi */
+.kab-faol-pastki {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr auto;
+  gap: var(--oraliq-5);
+  align-items: start;
+  margin-top: var(--oraliq-6);
+  padding-top: var(--oraliq-5);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.kab-faol-vaqt p {
+  margin: var(--oraliq-1) 0 0;
+  font-weight: 700;
+  font-size: var(--matn-asosiy);
+}
+
+.kab-punkt h4 {
+  margin: 0 0 var(--oraliq-1);
+  color: var(--matn-quyuq-ustida);
+}
+.kab-punkt-qator {
+  margin: 2px 0;
+  font-size: var(--matn-kichik);
+  color: var(--matn-quyuq-ustida-2);
+}
+.kab-punkt-qator a {
+  color: var(--matn-quyuq-ustida);
+}
+
+.kab-olish-kodi {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.kab-olish-kodi-raqam {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--matn-quyuq-ustida);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-boshqaruv);
+  padding: var(--oraliq-2) var(--oraliq-4);
+  line-height: 1.15;
+}
+
+/* -----------------------------------------------------------------
+   4. IKKI USTUNLI GRID (profil + buyurtmalar tarixi)
+------------------------------------------------------------------ */
+.kab-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--oraliq-5);
+}
+
+@media (min-width: 900px) {
+  .kab-grid {
+    grid-template-columns: 0.9fr 1.3fr;
+    align-items: start;
+  }
+}
+
+/* -----------------------------------------------------------------
+   5. PROFIL KARTASI
+------------------------------------------------------------------ */
+.kab-profil-bosh {
+  display: flex;
+  align-items: center;
+  gap: var(--oraliq-4);
+  margin-bottom: var(--oraliq-5);
+}
+
+.kab-avatar-idish {
+  position: relative;
+  flex: none;
+}
+.kab-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--qizil-97);
+  color: var(--matn-qizil);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  background-size: cover;
+  background-position: center;
+}
+.kab-avatar--rasmli {
+  color: transparent;
+}
+.kab-avatar-tugma {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--qora);
+  color: var(--matn-quyuq-ustida);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid var(--yuza-karta);
+}
+.kab-avatar-tugma:hover {
+  background: var(--qizil-45);
+}
+
+.kab-profil-ism-idish strong {
+  display: block;
+  font-size: var(--matn-h4);
+  margin-bottom: 2px;
+}
+
+.kab-stat-royxat {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--oraliq-3);
+  margin: 0 0 var(--oraliq-2);
+  padding: var(--oraliq-4) 0;
+  border-top: var(--chegara-ichki);
+  border-bottom: var(--chegara-ichki);
+}
+.kab-stat dt {
+  font-size: 11px;
+  color: var(--matn-uchinchi);
+  margin: 0 0 4px;
+}
+.kab-stat dd {
+  margin: 0;
+  font-weight: 700;
+  font-size: var(--matn-asosiy);
+  color: var(--matn-asosiy-rang);
+}
+
+/* -----------------------------------------------------------------
+   6. BUYURTMALAR TARIXI
+------------------------------------------------------------------ */
+.kab-buyurtma-karta {
+  border: var(--chegara-ichki);
+  border-radius: var(--r-kichik);
+  padding: var(--oraliq-4);
+  margin-bottom: var(--oraliq-3);
+}
+.kab-buyurtma-karta:last-child {
+  margin-bottom: 0;
+}
+.kab-buyurtma-bosh {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--oraliq-3);
+  flex-wrap: wrap;
+}
+.kab-buyurtma-meta {
+  margin-top: 4px;
+  font-size: var(--matn-kichik);
+  color: var(--matn-ikkinchi);
+}
+.kab-buyurtma-mahsulot {
+  margin-top: var(--oraliq-2);
+  font-size: var(--matn-kichik);
+  color: var(--matn-asosiy-rang);
+}
+.kab-buyurtma-punkt {
+  margin-top: 4px;
+  font-size: var(--matn-kichik);
+  color: var(--matn-uchinchi);
+}
+
+.kab-holat {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-chip);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.kab-holat--qabul { background: var(--qizil-97); color: var(--matn-qizil); }
+.kab-holat--tayyor { background: var(--tayyor-fon); color: var(--tayyor-matn); }
+.kab-holat--yolda { background: var(--yolda-fon); color: var(--yolda-matn); }
+.kab-holat--punktda { background: var(--yashil-95); color: var(--yashil-45); }
+.kab-holat--topshirildi { background: var(--yuza-kulrang); color: var(--qora); }
+.kab-holat--bekor { background: var(--kul-94); color: var(--matn-ikkinchi); }
+
+/* -----------------------------------------------------------------
+   7. QIZIQISH BILDIRGAN (saralangan / oxirgi ko'rilgan)
+------------------------------------------------------------------ */
+.kab-qiziqish {
+  margin-top: var(--oraliq-7);
+}
+
+/* -----------------------------------------------------------------
+   8. HEADER — kabinet ikonkasi "faol" holati
+------------------------------------------------------------------ */
+.kab-header-faol {
+  color: var(--matn-qizil);
+}
+
+/* -----------------------------------------------------------------
+   9. RESPONSIV — 767px va 480px (loyiha standart nuqtalari)
+------------------------------------------------------------------ */
+@media (max-width: 767px) {
+  .kab-karta {
+    padding: var(--oraliq-5);
+  }
+  .kab-faol {
+    padding: var(--oraliq-5) var(--oraliq-4);
+  }
+  .kab-faol-pastki {
+    grid-template-columns: 1fr;
+  }
+  .kab-olish-kodi {
+    align-items: flex-start;
+  }
+  .kab-stat-royxat {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--oraliq-2);
+  }
+}
+
+@media (max-width: 479px) {
+  .kab-bosqich-nom {
+    font-size: 9.5px;
+  }
+  .kab-stat dt {
+    font-size: 10px;
+  }
+  .kab-profil-bosh {
+    gap: var(--oraliq-3);
+  }
+  .kab-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+  }
+}
+
+/* --- Yetib borish holati (16.09, Menejer) -----------------------------
+   js/kabinet.js `taxminiyYetibBorish()` dan `kab-yb--*` sinfi keladi.
+   Oldin bu sinf hisoblanardi-yu HTML'ga qo'yilmasdi va CSS'da ham yo'q
+   edi — ya'ni "bekor qilingan" va "tayyor" matnlari bir xil ko'rinardi.
+   Faol buyurtma bloki to'q fonda, shuning uchun ranglar yorqin tanlandi. */
+.kab-yb { margin: 0; }
+.kab-yb--tayyor    { color: #6EE7B7; font-weight: 600; }
+.kab-yb--kechikkan { color: #FBBF24; font-weight: 600; }
+.kab-yb--bekor     { color: #FCA5A5; font-weight: 600; }

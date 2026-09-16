@@ -7,6 +7,327 @@
   <meta name="description" content="Arzonchi — televizor, muzlatgich, kir yuvish mashinasi, telefon va boshqa maishiy texnika. Qulay narxda, ishonchli sifatda. Yaqiningizdagi filialga marhamat.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/ilova.css">
+  <link rel="stylesheet" href="css/bosh-sahifa.css">
+  <style>
+    /* ═══ V1 QO'SHIMCHA USLUBLARI (Dasturchi, 2026-09-16) ═══
+       Faqat index.html'da ishlatiladi. css/style.css'ga HECH NARSA
+       yozilmadi (umumiy fayl — TEGMA qoidasi) — barcha yangi qoidalar
+       shu yerda, css/style.css'dagi tokenlardan var() bilan olingan.
+       Manba: maketlar-yangi/veb/01-bosh-sahifa-...html (V1, "Hafta
+       xitlari" tezkor filtri + "Banto" promo-banner bloki). */
+
+    .bolim-sarlavha-izoh {
+      margin: 6px 0 0;
+      font-size: var(--matn-asosiy);
+      color: var(--matn-ikkinchi);
+      max-width: 520px;
+    }
+
+    /* Tezkor kategoriya filtri — "Hafta xitlari" ustida. Real filtrlash
+       emas (grid ustidagi "Yana ko'rsatish" bosqichli chizish bilan
+       to'qnashmasin uchun), balki katalog.html'ga tayyor so'rov bilan
+       o'tuvchi havolalar — mavjud, sinovdan o'tgan filtr mantig'ini
+       qayta ishlatadi. */
+    .tezkor-filtr {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--oraliq-2);
+      margin-bottom: var(--oraliq-5);
+    }
+    .tezkor-filtr-chip {
+      display: inline-flex;
+      align-items: center;
+      height: 34px;
+      padding: 0 var(--oraliq-4);
+      border-radius: var(--radius-chip);
+      background: var(--yuza-uchinchi);
+      color: var(--matn-ikkinchi);
+      font-size: var(--matn-kichik);
+      font-weight: 600;
+      white-space: nowrap;
+      transition: background var(--tezlik-tez), color var(--tezlik-tez);
+    }
+    .tezkor-filtr-chip:hover { background: var(--kul-90); color: var(--matn-asosiy-rang); }
+    .tezkor-filtr-chip--faol,
+    .tezkor-filtr-chip--faol:hover { background: var(--kul-15); color: var(--matn-teskari); }
+
+    /* Promo-banner ("Banto" yo'nalishi, Arxitektor TZ §5 V1) — faqat
+       sahifada allaqachon boshqa joyda AYTILGAN, tasdiqlangan faktlar
+       (0% nasiya, bepul o'rnatish — bular .hero-taklif'da ham bor)
+       qayta ishlatiladi; yangi kontent/aksiya da'vosi YO'Q, shuning
+       uchun alohida ega tasdig'i talab qilinmaydi. */
+    .promo-panel {
+      background: var(--yuza-quyuq);
+      color: var(--matn-quyuq-ustida);
+      border-radius: var(--radius-blok);
+      padding: var(--oraliq-7) var(--oraliq-6);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--oraliq-6);
+      position: relative;
+      overflow: hidden;
+    }
+    .promo-panel-glow {
+      position: absolute;
+      right: -60px; bottom: -90px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle at center, rgba(230, 0, 18, 0.30) 0%, rgba(230, 0, 18, 0) 70%);
+      pointer-events: none;
+    }
+    .promo-panel-matn { position: relative; z-index: 1; max-width: 560px; }
+    .promo-panel-yorliq {
+      display: inline-block;
+      background: var(--qizil-50);
+      color: var(--matn-teskari);
+      font-size: var(--matn-yorliq);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 5px 10px;
+      border-radius: var(--radius-yorliq);
+      margin-bottom: var(--oraliq-3);
+    }
+    .promo-panel h2 {
+      color: var(--matn-teskari);
+      font-size: var(--matn-h1);
+      line-height: 1.15;
+      margin: 0 0 8px;
+    }
+    .promo-panel-matn p { color: var(--matn-quyuq-ustida-2); margin: 0 0 var(--oraliq-4); }
+    .promo-panel-royxat { display: flex; flex-wrap: wrap; gap: var(--oraliq-4) var(--oraliq-5); list-style: none; margin: 0; padding: 0; }
+    .promo-panel-royxat li { display: flex; align-items: center; gap: 8px; font-size: var(--matn-asosiy); }
+    .promo-panel-royxat svg { flex-shrink: 0; color: var(--yashil-45); }
+    .promo-panel-tugma {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: 8px;
+      height: 48px; padding: 0 var(--oraliq-5);
+      border-radius: var(--radius-tugma);
+      background: var(--qizil-50); color: var(--matn-teskari);
+      font-weight: 700; font-size: var(--matn-asosiy);
+      flex-shrink: 0;
+      transition: background var(--tezlik-tez);
+    }
+    .promo-panel-tugma:hover { background: var(--qizil-45); }
+
+    @media (max-width: 767px) {
+      .promo-panel { padding: var(--oraliq-6) var(--oraliq-4); }
+      .promo-panel-tugma { width: 100%; justify-content: center; }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       PREMIUM HERO + TV VITRINA + BIZNES BOSHLASH
+       (Dasturchi, 2026-09-16 17:22 — ega so'rovi, taqdimot 21:00)
+       Faqat shu index.html'da. css/style.css'ga HECH NARSA yozilmadi —
+       pastdagi qoidalar mavjud .hero-*/.ishonch-* sinflarini USTIDAN
+       bosadi (bu <style> ulardan KEYIN yuklanadi — !important shart
+       emas, oddiy kaskad tartibi yetadi). js/bosh-sahifa.js generatsiya
+       qiladigan sinf nomlariga (.hero-slayd, .hero-slayd-matn,
+       .hero-slayd-rasm, .hero-nuqta, .hero-oq, data-slayd...) HECH
+       QANDAY tegilmadi — faqat ko'rinishi (rang/o'lcham) kattalashdi.
+       ═══════════════════════════════════════════════════════════════ */
+
+    /* — 1. HERO: balandroq, kengroq, yirik tipografika — */
+    .hero { padding-top: var(--oraliq-5); }
+    .hero-tor { gap: var(--oraliq-5); }
+    .hero-karusel-shell,
+    .hero-karusel { height: 100%; }
+
+    .hero-slayd {
+      min-height: clamp(460px, 68vh, 700px);
+      padding: 0 clamp(28px, 5vw, 64px);
+    }
+    /* Har slaydga o'z to'q, premium gradienti — FAQAT mavjud tokenlardan
+       (--kul-10/15/25, --qizil-40/50, --sariq-50) qurilgan, yangi xom
+       rang kiritilmagan; rgba() qiymatlari shu tokenlarning RGB
+       dekodi — xuddi loyihadagi .promo-panel-glow'dagi kabi naqsh. */
+    .hero-slayd:nth-of-type(1) {
+      background:
+        radial-gradient(120% 140% at 84% 6%, rgba(230, 0, 18, .22) 0%, rgba(230, 0, 18, 0) 55%),
+        linear-gradient(155deg, var(--kul-10) 0%, var(--kul-15) 48%, var(--kul-25) 100%);
+    }
+    .hero-slayd:nth-of-type(2) {
+      background:
+        radial-gradient(120% 140% at 86% 100%, rgba(255, 176, 32, .18) 0%, rgba(255, 176, 32, 0) 55%),
+        linear-gradient(155deg, var(--kul-10) 0%, var(--kul-15) 48%, var(--kul-25) 100%);
+    }
+    .hero-slayd:nth-of-type(3) {
+      background:
+        radial-gradient(115% 140% at 80% 8%, rgba(255, 255, 255, .14) 0%, rgba(255, 255, 255, 0) 50%),
+        linear-gradient(150deg, var(--kul-15) 0%, var(--qizil-40) 55%, var(--qizil-50) 100%);
+    }
+
+    .hero-slayd::before {
+      /* mahsulot "yerga qo'ngan" soyasi — rasm ostidagi yumshoq halqa */
+      content: "";
+      position: absolute;
+      right: clamp(10px, 3vw, 46px);
+      bottom: 8%;
+      width: clamp(120px, 15vw, 220px);
+      height: 46px;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, .4) 0%, rgba(0, 0, 0, 0) 72%);
+      pointer-events: none;
+    }
+
+    /* MUHIM: matn ustuni va rasm bir-biriga TEGMASIN (rasm mutlaq
+       joylashgan — kesishmasligi uchun matn kengligi qattiq cheklandi,
+       uzun so'zlar uchun overflow-wrap zaxira sifatida qo'shildi). */
+    .hero-slayd-matn { max-width: min(470px, 56%); }
+    .hero-slayd-yorliq { padding: 6px 14px; }
+    .hero-slayd h2 {
+      /* O'zbekcha so'zlar uzun ("Muzlatgichlarga", "Konditsionerlar").
+         `word-break: break-word` ularni SO'Z O'RTASIDAN sindirardi —
+         16.09 da ekranda "Muzlatgichlarg / a 15%" bo'lib chiqdi. Endi so'z
+         butun qoladi; sig'masa faqat juda uzun so'z ko'chiriladi va o'lcham
+         ustunga qarab kichrayadi (`cqw` emas, oddiy `vw` bilan). */
+      font-size: clamp(2rem, 3.1vw, 3rem);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      margin: var(--oraliq-4) 0 var(--oraliq-3);
+      overflow-wrap: anywhere;
+      word-break: normal;
+      hyphens: none;
+    }
+    .hero-slayd p { opacity: .78; }
+    .hero-slayd-tugma {
+      height: var(--b-katta);
+      padding: 0 var(--oraliq-6);
+      font-size: 1rem;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .32);
+      transition: transform var(--tezlik), box-shadow var(--tezlik);
+    }
+    .hero-slayd:hover .hero-slayd-tugma { transform: translateY(-2px); }
+
+    .hero-slayd-rasm {
+      width: clamp(170px, 19vw, 260px);
+      height: clamp(220px, 40vh, 380px);
+      right: clamp(16px, 3vw, 40px);
+      bottom: 0;
+      filter: drop-shadow(0 26px 48px rgba(0, 0, 0, .48));
+      transition: transform var(--tezlik);
+    }
+    .hero-slayd:hover .hero-slayd-rasm { transform: translateY(-4px) scale(1.02); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-slayd-tugma,
+      .hero-slayd-rasm { transition: none; }
+      .hero-slayd:hover .hero-slayd-tugma,
+      .hero-slayd:hover .hero-slayd-rasm { transform: none; }
+    }
+
+    /* — o'ng ustun: baland heroga mos, "Bugungi taklif" kartasi bo'ylab cho'zildi — */
+    .hero-taklif {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--oraliq-6) var(--oraliq-5);
+    }
+    .hero-imtiyoz { gap: var(--oraliq-4); }
+    .hero-imtiyoz b { font-size: var(--matn-h4); }
+
+    @media (max-width: 899px) {
+      .hero-slayd {
+        min-height: clamp(360px, 62vh, 560px);
+        padding: 0 var(--oraliq-5);
+      }
+      .hero-slayd-matn { max-width: 100%; }
+      .hero-slayd h2 { font-size: clamp(1.5rem, 7vw, 2.25rem); margin: 10px 0 8px; }
+      .hero-slayd p { max-width: 62%; }
+      .hero-slayd-rasm { width: clamp(110px, 32vw, 160px); height: clamp(160px, 46vw, 230px); right: 12px; }
+      .hero-slayd-tugma { height: 44px; padding: 0 var(--oraliq-5); font-size: .875rem; }
+      .hero-slayd::before { width: clamp(90px, 24vw, 160px); bottom: 10px; }
+      .hero-taklif { flex: none; }
+    }
+    @media (max-width: 479px) {
+      .hero-slayd p { max-width: 100%; }
+      .hero-slayd-rasm { opacity: .42; }
+      .hero-slayd::before { display: none; }
+    }
+
+    /* — 2. TELEVIZOR VITRINASI (premium sahna, statik — JS'ga bog'liq emas) — */
+    .tv-sahna {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--oraliq-6);
+      overflow: hidden;
+      border-radius: var(--radius-blok);
+      min-height: clamp(300px, 42vw, 440px);
+      padding: var(--oraliq-7);
+      text-decoration: none;
+      background:
+        radial-gradient(90% 130% at 80% 26%, rgba(255, 176, 32, .12) 0%, rgba(255, 176, 32, 0) 60%),
+        linear-gradient(160deg, var(--kul-10) 0%, var(--kul-15) 55%, var(--kul-25) 100%);
+    }
+    .tv-sahna-glow {
+      position: absolute; right: 4%; top: 50%; transform: translateY(-50%);
+      width: clamp(220px, 32vw, 440px); height: clamp(150px, 20vw, 280px);
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, 0) 70%);
+      pointer-events: none;
+    }
+    .tv-sahna-matn { position: relative; z-index: 2; max-width: 440px; }
+    .tv-sahna-yorliq {
+      display: inline-block; background: rgba(255, 255, 255, .12); color: var(--matn-teskari);
+      font-size: var(--matn-yorliq); font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      padding: 6px 12px; border-radius: var(--radius-yorliq); margin-bottom: var(--oraliq-3);
+    }
+    .tv-sahna h2 {
+      color: var(--matn-teskari); font-size: var(--matn-wordmark); line-height: 1.02;
+      letter-spacing: -0.02em; margin: 0 0 var(--oraliq-3);
+    }
+    .tv-sahna p { color: var(--matn-quyuq-ustida-2); margin: 0 0 var(--oraliq-5); max-width: 380px; }
+    .tv-sahna-tugma {
+      position: relative; z-index: 2;
+      display: inline-flex; align-items: center; gap: 8px;
+      height: var(--b-katta); padding: 0 var(--oraliq-6);
+      border-radius: var(--radius-tugma);
+      background: var(--qizil-50); color: var(--matn-teskari); font-weight: 700; font-size: var(--matn-asosiy);
+      transition: transform var(--tezlik), box-shadow var(--tezlik);
+    }
+    .tv-sahna-rasm {
+      position: relative; z-index: 1;
+      width: clamp(200px, 28vw, 400px);
+      filter: drop-shadow(0 30px 50px rgba(0, 0, 0, .5));
+      flex-shrink: 0;
+    }
+    .tv-sahna--rasmsiz .tv-sahna-rasm { display: none; }
+    .tv-sahna:hover .tv-sahna-tugma { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(230, 0, 18, .35); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tv-sahna-tugma { transition: none; }
+      .tv-sahna:hover .tv-sahna-tugma { transform: none; }
+    }
+    @media (max-width: 767px) {
+      .tv-sahna { flex-direction: column; text-align: center; padding: var(--oraliq-6) var(--oraliq-5); }
+      .tv-sahna-matn { max-width: 100%; }
+      .tv-sahna p { max-width: 100%; margin-left: auto; margin-right: auto; }
+      .tv-sahna-rasm { width: min(70%, 240px); }
+    }
+
+    /* — 3. BIZNES BOSHLASH (hamkorlik arizasi — modal mantiqi pastdagi skriptda) — */
+    .biznes-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--oraliq-6);
+      background: var(--yuza-kulrang);
+      border-radius: var(--radius-blok);
+      padding: var(--oraliq-7) var(--oraliq-6);
+    }
+    .biznes-panel-matn { max-width: 620px; }
+    .biznes-panel-matn h2 { margin: var(--oraliq-2) 0 var(--oraliq-2); font-size: var(--matn-h1); }
+    .biznes-panel-matn p { margin: 0; color: var(--matn-ikkinchi); }
+    .biznes-panel .tugma { flex-shrink: 0; }
+    @media (max-width: 767px) {
+      .biznes-panel { padding: var(--oraliq-6) var(--oraliq-4); }
+      .biznes-panel .tugma { width: 100%; }
+    }
+  </style>
 </head>
 <body data-sahifa="bosh">
 
@@ -16,7 +337,7 @@
       <div class="xizmat-chap">
         <button type="button" class="xizmat-shahar" data-shahar-tugma aria-label="Shaharni tanlash"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-manzil-matn>Toshkent</span></button>
         <span>Yetkazib berish 1 kun</span>
-        <span>30 ta filial · 09:00–21:00</span>
+        <span>14 ta filial · 09:00–21:00</span>
       </div>
       <div class="xizmat-ong">
         <a href="savat.html">Buyurtmani kuzatish</a>
@@ -93,6 +414,53 @@
     </div>
   </section>
 
+  <!-- ══ TELEVIZOR VITRINASI — premium sahna (ega so'rovi 16.09: "televizori
+       xuddi shu shaklda ko'rinib tursin"). MUHIM: bu bo'lim STATIK —
+       js/bosh-sahifa.js yoki REKLAMA_BANNERLARI massiviga (js/malumotlar-
+       qoshimcha.js) bog'liq emas, chunki bu Dasturchi uchun TAQIQLANGAN
+       fayl (faqat o'qish mumkin). Rasm — loyihada MAVJUD, haqiqiy
+       mahsulot fotosi (rasmlar/mahsulotlar/7732.webp — Yasin 43" Smart TV,
+       WebOS, bezelsiz ekran, ar-7732). Yangi rasm yuklanmadi. ══ -->
+  <section class="bolim bolim-tepasi-kichik">
+    <div class="konteyner">
+      <a class="tv-sahna" href="katalog.html?kategoriya=televizor" aria-label="Televizorlar katalogini ko'rish">
+        <span class="tv-sahna-glow" aria-hidden="true"></span>
+        <div class="tv-sahna-matn">
+          <span class="tv-sahna-yorliq">Televizorlar</span>
+          <!-- KONTENT EGASI TASDIQLAYDI: sarlavha namunasi -->
+          <h2>Katta ekran. Kichik narx.</h2>
+          <p>Smart TV, WebOS, bezelsiz ekran — filialda ko'rib, saytda tanlang.</p>
+          <span class="tv-sahna-tugma">Televizorlarni ko'rish &rarr;</span>
+        </div>
+        <img class="tv-sahna-rasm" src="rasmlar/mahsulotlar/7732.webp" alt="Smart televizor" loading="lazy" onerror="this.closest('.tv-sahna').classList.add('tv-sahna--rasmsiz')">
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ QADRIYATLAR PANELI (Dizayner TZ 04 §4, V1 maketiga ko'ra hero ostiga ko'chirildi) ══ -->
+  <section class="bolim bolim-tepasi-kichik">
+    <div class="konteyner">
+      <div class="ishonch-qatori">
+        <div class="ishonch-katak">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg>
+          <div><b>Bepul yetkazish</b><span>Toshkent bo'ylab, 1 kun</span></div>
+        </div>
+        <div class="ishonch-katak">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>
+          <div><b>2 yil kafolat</b><span>Rasmiy servis</span></div>
+        </div>
+        <div class="ishonch-katak">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <div><b>Nasiya 24 oy</b><span>Ortiqcha foizsiz</span></div>
+        </div>
+        <div class="ishonch-katak">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div><b>14 ta filial</b><span>Ko'rib olasiz</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="bolim">
     <div class="konteyner">
       <div class="bolim-sarlavha">
@@ -100,6 +468,7 @@
           <span class="bolim-yorliq">Mahsulotlar</span>
           <h2>Kategoriyalar</h2>
         </div>
+        <a href="katalog.html" class="havola-korish">Barcha toifalar &rarr;</a>
       </div>
       <div class="kategoriya-grid">
         <a class="kategoriya-karta" href="katalog.html?kategoriya=muzlatgich" data-kategoriya="muzlatgich">
@@ -143,12 +512,48 @@
       <div class="bolim-sarlavha">
         <div class="bolim-sarlavha-matn">
           <span class="bolim-yorliq">Katalog</span>
-          <h2>Tavsiya etilgan mahsulotlar</h2>
+          <h2>Hafta xitlari</h2>
+          <p class="bolim-sarlavha-izoh">Chegirmadagi va yangi kelgan mahsulotlar birinchi bo'lib ko'rsatiladi.</p>
         </div>
-        <a href="katalog.html" class="havola-korish">Butun katalog →</a>
+        <a href="katalog.html" class="havola-korish">Butun katalog &rarr;</a>
+      </div>
+      <!-- Tezkor filtr: real vaqtda grid'ni qayta chizmaydi (bu "Yana
+           ko'rsatish" bosqichli mexanizmi bilan to'qnashadi), balki
+           katalog.html'ning mavjud, sinovdan o'tgan filtr/qidiruv
+           mantig'iga tayyor so'rov bilan olib boradi. -->
+      <div class="tezkor-filtr" aria-label="Tezkor kategoriya havolalari">
+        <span class="tezkor-filtr-chip tezkor-filtr-chip--faol" aria-current="true">Barchasi</span>
+        <a href="katalog.html?aksiya=1" class="tezkor-filtr-chip">Aksiyadagilar</a>
+        <a href="katalog.html?kategoriya=muzlatgich" class="tezkor-filtr-chip">Muzlatgichlar</a>
+        <a href="katalog.html?kategoriya=kir-yuvish-mashinasi" class="tezkor-filtr-chip">Kir yuvish</a>
+        <a href="katalog.html?kategoriya=televizor" class="tezkor-filtr-chip">Televizorlar</a>
       </div>
       <div class="mahsulot-grid" id="tavsiya-mahsulotlar">
         <!-- js/bosh-sahifa.js orqali JS bilan to'ldiriladi -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PROMO-BANNER (Arxitektor TZ §5 V1: "Banto" bloki) — faqat
+       sahifada boshqa joyda allaqachon aytilgan, tasdiqlangan faktlar
+       (0% nasiya 24 oy, bepul o'rnatish) qayta ishlatiladi; yangi
+       aksiya/promokod da'vosi YO'Q — shuning uchun bu blok uchun
+       alohida kontent tasdig'i talab qilinmaydi. ══ -->
+  <section class="bolim">
+    <div class="konteyner">
+      <div class="promo-panel">
+        <span class="promo-panel-glow" aria-hidden="true"></span>
+        <div class="promo-panel-matn">
+          <span class="promo-panel-yorliq">Arzonchi Nasiya</span>
+          <h2>Nasiyaga ega bo'ling — bugun tanlang, 24 oygacha to'lang</h2>
+          <p>Boshlang'ich to'lovsiz, 0% ustama — filialda yoki saytda rasmiylashtirasiz.</p>
+          <ul class="promo-panel-royxat">
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Boshlang'ich to'lovsiz</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>O'rnatish bepul</li>
+            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Toshkent bo'ylab yetkazish</li>
+          </ul>
+        </div>
+        <a href="katalog.html" class="promo-panel-tugma">Nasiya shartlarini ko'rish &rarr;</a>
       </div>
     </div>
   </section>
@@ -258,26 +663,22 @@
     </div>
   </section>
 
-  <!-- ══ ISHONCH QATORI (Dizayner TZ 04 §4) ══ -->
-  <section class="bolim">
+  <!-- ══ BIZNES BOSHLASH — alohida, ko'rinarli bo'lim (ega so'rovi 16.09).
+       Bosilganda MODAL forma shu sahifada ochiladi, boshqa sahifaga
+       O'TMAYDI. Server endpointi yo'q — ariza localStorage'ga saqlanadi
+       (pastdagi skript, mavjud DOKON.modalOch/DOKON.xabar orqali —
+       js/do-kon.js'ga HECH NARSA yozilmadi/o'zgartirilmadi, faqat uning
+       tayyor ochiq funksiyalari chaqirildi). ══ -->
+  <section class="bolim" id="biznes-boshlash">
     <div class="konteyner">
-      <div class="ishonch-qatori">
-        <div class="ishonch-katak">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="18.5" cy="18.5" r="2"/></svg>
-          <div><b>Bepul yetkazish</b><span>Toshkent bo'ylab, 1 kun</span></div>
+      <div class="biznes-panel">
+        <div class="biznes-panel-matn">
+          <span class="bolim-yorliq">Hamkorlik</span>
+          <!-- KONTENT EGASI TASDIQLAYDI: sarlavha va tavsif namunasi -->
+          <h2>O'z biznesingizni Arzonchi bilan boshlang</h2>
+          <p>Do'kon ochmoqchimisiz yoki onlayn savdo qilmoqchimisiz — ariza qoldiring, mutaxassisimiz siz bilan bog'lanadi.</p>
         </div>
-        <div class="ishonch-katak">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>
-          <div><b>2 yil kafolat</b><span>Rasmiy servis</span></div>
-        </div>
-        <div class="ishonch-katak">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-          <div><b>Nasiya 24 oy</b><span>Ortiqcha foizsiz</span></div>
-        </div>
-        <div class="ishonch-katak">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <div><b>30 ta filial</b><span>Ko'rib olasiz</span></div>
-        </div>
+        <button type="button" class="tugma tugma-asosiy tugma-qongiroq" id="biznes-ariza-tugma">Ariza qoldirish</button>
       </div>
     </div>
   </section>
@@ -306,6 +707,141 @@
   <script src="js/ilova.js"></script>
   <script src="js/bosh-sahifa.js"></script>
   <script src="js/harakat.js"></script>
+
+  <!-- ══ BIZNES BOSHLASH — ariza modali (Dasturchi, 2026-09-16). Faqat
+       shu index.html'da ishlaydi, IIFE. js/do-kon.js'ga TEGILMADI —
+       uning tayyor DOKON.modalOch/DOKON.modalYop/DOKON.xabar/
+       DOKON.telefonTogrimi/DOKON.telefonKorinishi funksiyalari (allaqachon
+       login va boshqa modallar uchun ishlatilgan, sinovdan o'tgan)
+       qayta ishlatildi — shu bilan Esc/fondan bosish/fokus qaytishi
+       BEPUL keladi (modalOch/modalYop shularni allaqachon bajaradi).
+       ⚠️ SERVER YO'Q: ariza faqat brauzer localStorage'ga yoziladi
+       (kalit: arzonchi_biznes_arizalar_v1), hech qayerga yuborilmaydi. -->
+  <script>
+  (function () {
+    "use strict";
+    var KALIT = "arzonchi_biznes_arizalar_v1";
+    var tugma = document.getElementById("biznes-ariza-tugma");
+    if (!tugma) return;
+
+    function arizalarniOqi() {
+      try {
+        var xom = window.localStorage.getItem(KALIT);
+        var q = xom ? JSON.parse(xom) : [];
+        return Array.isArray(q) ? q : [];
+      } catch (e) { return []; }
+    }
+
+    function arizalarniYoz(royxat) {
+      try { window.localStorage.setItem(KALIT, JSON.stringify(royxat)); } catch (e) { /* joy yo'q/shaxsiy rejim — ariza saqlanmaydi, sahifa buzilmaydi */ }
+    }
+
+    function telefonTogrimi(qiymat) {
+      if (window.DOKON && typeof DOKON.telefonTogrimi === "function") return DOKON.telefonTogrimi(qiymat);
+      // zaxira tekshiruv (DOKON yuklanmagan holat uchun): +998 XX XXX XX XX
+      return /^998\d{9}$/.test(String(qiymat || "").replace(/\D/g, ""));
+    }
+
+    function elOl(id) { return document.getElementById(id); }
+
+    function formaHTML() {
+      return (
+        '<form id="biznes-forma" novalidate>' +
+          '<label class="maydon"><span>Ism *</span><input type="text" id="biznes-ism" autocomplete="name" required></label>' +
+          '<p class="maydon-xato-inline" id="biznes-ism-xato" hidden></p>' +
+          '<label class="maydon"><span>Telefon *</span><input type="tel" id="biznes-telefon" placeholder="+998 90 123 45 67" inputmode="tel" autocomplete="tel" required></label>' +
+          '<p class="maydon-xato-inline" id="biznes-telefon-xato" hidden></p>' +
+          '<label class="maydon"><span>Shahar *</span><input type="text" id="biznes-shahar" autocomplete="address-level2" required></label>' +
+          '<p class="maydon-xato-inline" id="biznes-shahar-xato" hidden></p>' +
+          '<label class="maydon"><span>Biznes turi *</span>' +
+            '<select id="biznes-tur" required>' +
+              '<option value="">Tanlang…</option>' +
+              '<option value="dokon">Do\'kon</option>' +
+              '<option value="onlayn">Onlayn savdo</option>' +
+              '<option value="boshqa">Boshqa</option>' +
+            '</select></label>' +
+          '<p class="maydon-xato-inline" id="biznes-tur-xato" hidden></p>' +
+          '<label class="maydon"><span>Qisqa izoh</span><textarea id="biznes-izoh" rows="3"></textarea></label>' +
+          '<button type="submit" class="tugma tugma-asosiy tugma-toliq">Yuborish</button>' +
+        '</form>'
+      );
+    }
+
+    function maydonTekshir(inputId, xatoId, tekshir, xabarMatn) {
+      var input = elOl(inputId), xato = elOl(xatoId);
+      var ok = tekshir((input.value || "").trim());
+      var maydon = input.closest(".maydon");
+      if (ok) {
+        xato.hidden = true;
+        if (maydon) { maydon.classList.remove("maydon--xato"); maydon.classList.add("maydon--togri"); }
+      } else {
+        xato.textContent = xabarMatn;
+        xato.hidden = false;
+        if (maydon) { maydon.classList.add("maydon--xato"); maydon.classList.remove("maydon--togri"); }
+      }
+      return ok;
+    }
+
+    function validatsiya() {
+      var ism = maydonTekshir("biznes-ism", "biznes-ism-xato",
+        function (v) { return v.length >= 2; }, "Ismingizni kiriting (kamida 2 ta harf).");
+      var tel = maydonTekshir("biznes-telefon", "biznes-telefon-xato",
+        telefonTogrimi, "Telefon raqamni to'g'ri kiriting (masalan +998 90 123 45 67).");
+      var shahar = maydonTekshir("biznes-shahar", "biznes-shahar-xato",
+        function (v) { return v.length >= 2; }, "Shaharni kiriting.");
+      var tur = maydonTekshir("biznes-tur", "biznes-tur-xato",
+        function (v) { return !!v; }, "Biznes turini tanlang.");
+      return ism && tel && shahar && tur;
+    }
+
+    function shaklniUla() {
+      var forma = elOl("biznes-forma");
+      if (!forma) return;
+      forma.addEventListener("submit", function (h) {
+        h.preventDefault();
+        if (!validatsiya()) return;
+
+        var telefonXom = elOl("biznes-telefon").value.trim();
+        var telefonKor = (window.DOKON && typeof DOKON.telefonKorinishi === "function")
+          ? DOKON.telefonKorinishi(telefonXom) : telefonXom;
+
+        var ariza = {
+          ism: elOl("biznes-ism").value.trim(),
+          telefon: telefonKor,
+          shahar: elOl("biznes-shahar").value.trim(),
+          tur: elOl("biznes-tur").value,
+          izoh: elOl("biznes-izoh").value.trim(),
+          sana: new Date().toISOString()
+        };
+        var royxat = arizalarniOqi();
+        royxat.push(ariza);
+        arizalarniYoz(royxat);
+
+        if (window.DOKON && typeof DOKON.modalYop === "function") DOKON.modalYop();
+        if (window.DOKON && typeof DOKON.xabar === "function") {
+          DOKON.xabar("Arizangiz qabul qilindi. Tez orada siz bilan bog'lanamiz.", "ok");
+        } else {
+          window.alert("Arizangiz qabul qilindi. Tez orada siz bilan bog'lanamiz.");
+        }
+      });
+    }
+
+    tugma.addEventListener("click", function () {
+      if (!window.DOKON || typeof DOKON.modalOch !== "function") {
+        window.alert("Ariza formasi vaqtincha ishlamayapti. Iltimos, keyinroq qayta urinib ko'ring yoki qo'ng'iroq qiling: +998 90 123 45 67.");
+        return;
+      }
+      DOKON.modalOch("Hamkorlik arizasi", formaHTML());
+      shaklniUla();
+      // DOKON.modalOch o'zi birinchi fokuslanadigan elementga (odatda "Yopish"
+      // tugmasiga) fokus beradi — ega talabi "fokus FORMA ichiga o'tsin"ni
+      // aniq bajarish uchun bu yerda Ism maydoniga qayta fokus beramiz.
+      var ismMaydoni = elOl("biznes-ism");
+      if (ismMaydoni) ismMaydoni.focus();
+    });
+  })();
+  </script>
+
   <nav class="mobil-panel" aria-label="Tezkor navigatsiya">
     <a href="index.html" data-mobil="bosh">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>

@@ -1,0 +1,107 @@
+/* =======================================================================
+   BOSH-SAHIFA.CSS — faqat index.html'da ishlatiladi (V1 yangi maket,
+   2026-09-16). Bu fayl css/style.css'ni ALMASHTIRMAYDI, faqat ustiga
+   qo'shimcha qatlam bo'lib yuklanadi (index.html'da style.css'dan KEYIN
+   ulangan). Barcha ranglar/oraliqlar/radiuslar css/style.css'dagi
+   tokenlardan var() bilan olinadi — yangi xom qiymat kiritilmagan.
+   ❌ css/style.css'ga bu fayldan HECH NARSA yozilmaydi/o'zgartirilmaydi.
+   Manba: maketlar-yangi/veb/01-bosh-sahifa-...html (Dizayner+Arxitektor
+   ko'rsatmasi, Menejer topshirig'i 2026-09-16 14:41).
+   ======================================================================= */
+
+/* -----------------------------------------------------------------
+   1. HERO KARUSELI — navigatsiya strelkalari
+   Mavjud scroll-snap karusel MANTIG'I (js/bosh-sahifa.js,
+   engYaqinSlaydIndeksi, avtoAylantir) TEGILMAGAN — bu yerda faqat
+   strelka tugmalarining ko'rinishi. Strelkalar .hero-karusel-shell
+   ichida, .hero-karusel'ning "children"iga KIRMAYDI — shunga mos
+   JS generatsiya qiladi (indekslash buzilmasin uchun).
+------------------------------------------------------------------ */
+.hero-karusel-shell {
+  position: relative;
+}
+
+.hero-oq {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--radius-chip);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--kul-100);
+  cursor: pointer;
+  z-index: 5;
+  transition: background var(--tezlik-tez), color var(--tezlik-tez);
+}
+.hero-oq:hover { background: var(--kul-100); color: var(--kul-15); }
+.hero-oq:focus-visible { outline: 2px solid var(--kul-100); outline-offset: 2px; }
+.hero-oq--chap { left: 14px; }
+.hero-oq--ong { right: 14px; }
+
+@media (max-width: 767px) {
+  /* mobilda barmoq bilan suriladi (mavjud UX) — strelkalar joy tejash
+     uchun yashiriladi, xuddi .karusel-oq (mahsulot karuseli) kabi */
+  .hero-oq { display: none; }
+}
+
+/* -----------------------------------------------------------------
+   2. QADRIYATLAR PANELI — endi Hero'dan keyin, alohida kartalar
+   shaklida (V1 maketi: "Value Propositions", 4 ustun).
+   Bazaviy .ishonch-qatori/.ishonch-katak css/style.css'da — u yerda
+   BITTA panel + ajratgich chiziqlar edi. Bu yerda FAQAT index.html
+   uchun kartochka ko'rinishiga o'giramiz; HTML/mazmun o'zgarmadi,
+   faqat joyi index.html'da hero ostiga ko'chirildi.
+------------------------------------------------------------------ */
+.ishonch-qatori {
+  margin-top: 0;
+  background: transparent;
+  border-radius: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--oraliq-3);
+  padding: 0;
+}
+
+.ishonch-katak {
+  justify-content: flex-start;
+  background: var(--yuza-karta);
+  border: 1px solid var(--chegara-nozik);
+  border-radius: var(--radius-kartochka);
+  padding: var(--oraliq-4);
+  box-shadow: var(--soya-kichik);
+  transition: transform var(--tezlik), box-shadow var(--tezlik);
+}
+.ishonch-katak:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--soya-orta);
+}
+/* eski "qator ichida ajratgich chiziq" endi shart emas — har kartaning
+   o'z ramkasi bor */
+.ishonch-katak:not(:last-child) { border-right: 0; }
+
+.ishonch-katak svg {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border-radius: var(--radius-kartochka);
+  background: var(--qizil-97);
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  .ishonch-qatori { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--oraliq-3); padding: 0; }
+}
+@media (max-width: 479px) {
+  .ishonch-qatori { grid-template-columns: 1fr; }
+}
+
+/* -----------------------------------------------------------------
+   3. KATEGORIYALAR BO'LIMI — "Barcha toifalar" havolasi
+   HTML'ga .havola-korish (mavjud, css/style.css'da tayyor stil bilan)
+   qo'shildi — bu yerda qo'shimcha CSS shart emas.
+------------------------------------------------------------------ */

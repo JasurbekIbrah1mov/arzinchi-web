@@ -1,0 +1,110 @@
+/* =======================================================================
+   MAHSULOT.CSS — faqat mahsulot.html sahifasi uchun qo'shimcha uslublar.
+   css/style.css ga TEGILMAGAN — bu fayl uning ustiga qo'shiladi (link
+   mahsulot.html <head>da style.css'dan KEYIN keladi).
+
+   Manba: maketlar-yangi/veb/03-artel-...-mahsulot-tafsilotlari.html
+   (Tailwind AI-maket). Tailwind sinflari KO'CHIRILMAGAN — loyihaning
+   o'zidagi css/style.css tokenlariga (var(--...)) XARITALANGAN:
+
+     Maket (Tailwind token)         -> Loyiha tokeni (css/style.css)
+     ------------------------------------------------------------------
+     brand-red-cta   #E60012        -> var(--qizil-50)  (to'ldirilgan yuza)
+     primary (matn)  #B7000C/#C4000F-> var(--matn-qizil) (var(--qizil-45))
+     savings-green   #0B7A58        -> var(--yashil-45) (var(--matn-tejam-yashil))
+     green-soft-tint #E4F5EE        -> var(--yashil-95)  (AYNAN bir xil hex!)
+     warning-amber   #FFB020        -> var(--sariq-50)
+     amber-soft-tint #FFF6E5        -> var(--sariq-95)   (AYNAN bir xil hex!)
+     charcoal-black  #0E0E10/#0E0E10-> var(--qora) (var(--kul-15), AYNAN bir xil)
+     text-muted      #6B7280        -> var(--matn-ikkinchi) (yaqin, loyiha shkalasi)
+     border-subtle   #E5E7EB        -> var(--chegara-nozik) (var(--kul-90), yaqin)
+     canvas-white    #FFFFFF        -> var(--oq)
+     radius xl (12px)                -> var(--radius-tugma)
+     radius 2xl (16px, rasm/karta)   -> var(--radius-kartochka)
+     radius full (pill)              -> var(--radius-chip)
+     space-md/lg/xl/2xl (12/16/24/32)-> var(--oraliq-3/4/5/6)
+     shadow-xl (buy box)             -> var(--soya-suzuvchi) (loyiha qoidasi:
+                                          sticky panel = "suzuvchi" -> soya OK)
+
+   Buzilmasin: css/style.css dagi .mahsulot-tartib/.sotib-karta/.mt-tab/...
+   klasslari shu faylda FAQAT to'ldiriladi (yangi klass yoki qo'shimcha
+   xossalar), asosiy qoidalar qayta yozilmaydi.
+   ======================================================================= */
+
+/* -----------------------------------------------------------------
+   1. RASM BLOKI — suzuvchi chegirma belgisi (haqiqiy AKSIYALAR
+      ma'lumotidan; o'rin-egallovchi/soxta belgi emas)
+------------------------------------------------------------------ */
+.mahsulot-tafsilot-rasm {
+  position: relative;
+}
+
+.mg-badge-chegirma {
+  position: absolute;
+  top: var(--oraliq-3);
+  left: var(--oraliq-3);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-chip);
+  background: var(--qizil-50);
+  color: var(--matn-teskari);
+  font-size: var(--matn-kichik);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: var(--soya-mayda);
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------------
+   2. NASIYA BLOKI — "0-0-12" belgisi (dastlabki to'lovsiz, foizsiz,
+      12 oy — haqiqiy hisob: narx / 12, qoldiq oxirgi oyga)
+------------------------------------------------------------------ */
+.sotib-nasiya .sn-bosh {
+  flex-wrap: wrap;
+  gap: var(--oraliq-2);
+}
+
+.sotib-nasiya .sn-bosh > span:nth-child(2) {
+  margin-right: auto;
+}
+
+.sn-belgi {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: var(--radius-chip);
+  background: var(--yashil-95);
+  color: var(--yashil-45);
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+}
+
+/* -----------------------------------------------------------------
+   3. SOTIB-OLISH KARTASI — desktopda sticky (suzuvchi), shu sabab
+      loyiha qoidasi bo'yicha soya OLADI (style.css §2: "Soya faqat
+      suzuvchi narsalarda: dropdown, modal, sticky header...").
+------------------------------------------------------------------ */
+@media (min-width: 1080px) {
+  .sotib-karta {
+    box-shadow: var(--soya-suzuvchi);
+  }
+}
+
+/* -----------------------------------------------------------------
+   4. O'XSHASH MAHSULOTLAR — maket bo'yicha aniq 4 ta, bitta qatorda
+      (mahsulot.js: oxshashMahsulotlar(mahsulot, 4)). Loyihaning
+      umumiy auto-fill gridini shu bo'limda 4 ustunga qattiqlaydi —
+      faqat shu klass bilan, boshqa sahifalarga ta'sir qilmaydi.
+------------------------------------------------------------------ */
+.mahsulot-grid--4 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 640px) {
+  .mahsulot-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

@@ -155,8 +155,25 @@ document.addEventListener("DOMContentLoaded", function () {
       '" data-slayd="' + i + '" aria-label="Banner ' + (i + 1) + '"></button>';
   }
 
+  // MUHIM: strelka tugmalari .hero-karusel ICHIGA emas, alohida
+  // .hero-karusel-shell qobig'iga qo'yiladi — aks holda ular ham
+  // karusel.children ro'yxatiga kirib, engYaqinSlaydIndeksi va
+  // nuqta/avto-aylanish indekslashini buzib qo'yardi (slaydlar +
+  // strelkalar aralashib ketardi).
+  var oqlar = REKLAMA_BANNERLARI.length > 1
+    ? '<button type="button" class="hero-oq hero-oq--chap" id="hero-oldingi" aria-label="Oldingi banner">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>' +
+      "</button>" +
+      '<button type="button" class="hero-oq hero-oq--ong" id="hero-keyingi" aria-label="Keyingi banner">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+      "</button>"
+    : "";
+
   joy.innerHTML =
-    '<div class="hero-karusel" id="hero-karusel">' + slaydlar + "</div>" +
+    '<div class="hero-karusel-shell">' +
+      '<div class="hero-karusel" id="hero-karusel">' + slaydlar + "</div>" +
+      oqlar +
+    "</div>" +
     '<div class="hero-nuqtalar">' + nuqtalar + "</div>";
 
   var karusel = document.getElementById("hero-karusel");
@@ -183,6 +200,21 @@ document.addEventListener("DOMContentLoaded", function () {
       nuqtaTugmalar[k].classList.toggle("hero-nuqta--faol", k === joriy);
     }
   });
+
+  // Navigatsiya strelkalari — joriy slaydga nisbatan oldingi/keyingisiga
+  // o'tadi (doiraviy: oxiridan keyin — birinchisiga). Xuddi nuqta bilan
+  // bir xil offsetLeft usuli ishlatiladi (yaxlitlash xatosi bo'lmasin).
+  function heroSiljit(yonalish) {
+    var joriy = engYaqinSlaydIndeksi(karusel);
+    var soni = REKLAMA_BANNERLARI.length;
+    var keyingisi = (joriy + yonalish + soni) % soni;
+    var maqsad = karusel.children[keyingisi];
+    if (maqsad) karusel.scrollTo({ left: maqsad.offsetLeft, behavior: "smooth" });
+  }
+  var oldingiTugma = document.getElementById("hero-oldingi");
+  var keyingiTugma = document.getElementById("hero-keyingi");
+  if (oldingiTugma) oldingiTugma.addEventListener("click", function () { heroSiljit(-1); });
+  if (keyingiTugma) keyingiTugma.addEventListener("click", function () { heroSiljit(1); });
 
   avtoAylantir(karusel, REKLAMA_BANNERLARI.length, 5000);
 });
