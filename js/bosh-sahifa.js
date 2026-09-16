@@ -216,7 +216,9 @@ document.addEventListener("DOMContentLoaded", function () {
   if (oldingiTugma) oldingiTugma.addEventListener("click", function () { heroSiljit(-1); });
   if (keyingiTugma) keyingiTugma.addEventListener("click", function () { heroSiljit(1); });
 
-  avtoAylantir(karusel, REKLAMA_BANNERLARI.length, 5000);
+  // EGA KO'RSATMASI (16.09, 18:20): banner o'zi aylanib tursin, oraliq
+  // IKKI SONIYA. Oldin 5000 ms edi.
+  avtoAylantir(karusel, REKLAMA_BANNERLARI.length, 2000);
 });
 
 /* Joriy scroll pozitsiyasiga eng yaqin turgan bola-elementning indeksi
