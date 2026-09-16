@@ -7,6 +7,22 @@
   <meta name="description" content="Arzonchi savati — tanlagan mahsulotlaringizni ko'ring, sonini o'zgartiring va buyurtmani rasmiylashtiring.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/ilova.css">
+  <style>
+    /* V4 (16.09) — savat.html'ga xos kichik qo'shimchalar (0-0-12 nasiya
+       ko'rsatkichi, band to'lov varianti). css/style.css umumiy fayl —
+       boshqa dasturchilar shu daqiqada ustida ishlayapti, shuning uchun
+       yangi sinflar shu yerda, mavjud T0 tokenlardan foydalanib. */
+    .arz-nasiya-chip { display: block; margin-top: 4px; font-size: var(--matn-kichik); font-weight: 700; color: var(--nasiya-matn); }
+    .arz-nasiya-chip--ojiz { color: var(--matn-uchinchi); font-weight: 500; }
+    .tolov-variant--band { opacity: .55; }
+    .tolov-variant--band:hover { background: none; }
+    .arz-nasiya-eslatma {
+      display: flex; align-items: center; justify-content: space-between;
+      margin: -2px 0 10px; padding: 8px 10px;
+      background: var(--nasiya-fon); color: var(--nasiya-matn);
+      border-radius: var(--radius-yorliq); font-size: var(--matn-kichik); font-weight: 600;
+    }
+  </style>
 </head>
 <body data-sahifa="savat">
 
@@ -16,7 +32,7 @@
       <div class="xizmat-chap">
         <button type="button" class="xizmat-shahar" data-shahar-tugma aria-label="Shaharni tanlash"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-manzil-matn>Toshkent</span></button>
         <span>Yetkazib berish 1 kun</span>
-        <span>30 ta filial · 09:00–21:00</span>
+        <span>14 ta filial · 09:00–21:00</span>
       </div>
       <div class="xizmat-ong">
         <a href="savat.html">Buyurtmani kuzatish</a>

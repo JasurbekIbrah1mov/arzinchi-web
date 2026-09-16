@@ -73,8 +73,8 @@ function mobilSotibCtaHTML(mahsulot) {
   var savatda = DOKON.savatdaBormi(mahsulot.id);
   var nasiya = "";
   if (DOKON.nasiyaMumkinmi(mahsulot.narx)) {
-    var eng = DOKON.nasiyaEngKichik(mahsulot.narx);
-    if (eng) nasiya = '<span class="msc-nasiya">' + narxniFormatla(eng.oylik) + " &times; " + eng.oy + " oy</span>";
+    var oo12 = nasiya0012Hisobla(mahsulot.narx);
+    if (oo12) nasiya = '<span class="msc-nasiya">0-0-12 &middot; ' + narxniFormatla(oo12.oylik) + "/oy</span>";
   }
   return '<div class="mobil-sotib-cta">' +
     '<div class="msc-narx"><b>' + narxniFormatla(mahsulot.narx) + "</b>" + nasiya + "</div>" +
@@ -87,8 +87,14 @@ function mobilSotibCtaHTML(mahsulot) {
 /* --- 1-USTUN: galereya (asosiy rasm + kichik rasmlar) ----------------- */
 function galereyaUstuni(mahsulot) {
   var rasmHTML = rasmYokiPlaceholderHTML(mahsulot.rasm, mahsulot.nomi, "", "");
+  // Chegirma foizi bo'lsa — rasm ustida suzuvchi belgi (haqiqiy AKSIYALAR
+  // ma'lumotidan, o'rin-egallovchi/to'qima emas)
+  var aksiya = DOKON.aksiyaOl(mahsulot);
+  var badgeHTML = aksiya
+    ? '<span class="mg-badge-chegirma">&minus;' + aksiya.chegirmaFoiz + "%</span>"
+    : "";
   return '<div class="mahsulot-galereya">' +
-    '<div class="mahsulot-tafsilot-rasm">' + rasmHTML + "</div>" +
+    '<div class="mahsulot-tafsilot-rasm">' + rasmHTML + badgeHTML + "</div>" +
     galereyaHTML(mahsulot) +
     "</div>";
 }
@@ -175,17 +181,19 @@ function sotibKartaHTML(mahsulot) {
       "</div>";
   }
 
-  // Nasiya preview box (amber) + yashirin to'liq kalkulyator
+  // Nasiya preview box (amber) — «0-0-12»: haqiqiy hisob (narx ÷ 12,
+  // qoldiq oxirgi oyga qo'shiladi), + yashirin to'liq kalkulyator
+  // (boshqa muddatlar — 3/6/12/24 oy, ustama bilan)
   var nasiyaHTML = "";
   if (DOKON.nasiyaMumkinmi(mahsulot.narx)) {
-    var eng = DOKON.nasiyaEngKichik(mahsulot.narx);
-    if (eng) {
+    var oo12 = nasiya0012Hisobla(mahsulot.narx);
+    if (oo12) {
       nasiyaHTML =
         '<div class="sotib-nasiya">' +
-        '<div class="sn-bosh"><span>Nasiyaga, ' + eng.oy + " oy</span>" +
-        '<button type="button" class="sn-hisob" id="nasiya-hisob-tugma">Hisoblash</button></div>' +
-        '<div class="sn-oylik">' + narxniFormatla(eng.oylik) + '<span>/oy</span></div>' +
-        '<div class="sn-izoh">Dastlabki to\'lovsiz &middot; ortiqcha foizsiz</div>' +
+        '<div class="sn-bosh"><span class="sn-belgi">0-0-12</span><span>Muddatli to\'lov, 12 oy</span>' +
+        '<button type="button" class="sn-hisob" id="nasiya-hisob-tugma">Boshqa muddatlar</button></div>' +
+        '<div class="sn-oylik">' + narxniFormatla(oo12.oylik) + '<span>/oy</span></div>' +
+        '<div class="sn-izoh">Dastlabki to\'lovsiz &middot; foizsiz (narx &divide; 12)</div>' +
         "</div>" +
         '<div class="nasiya-toliq" id="nasiya-toliq" hidden>' + nasiyaKalkulyatorHTML(mahsulot) + "</div>";
     }
@@ -216,7 +224,7 @@ function ishonchQatorlariHTML() {
     ['<rect x="1.5" y="6" width="14" height="10" rx="2"/><path d="M15.5 9h3.5l3 3.5V16h-6.5"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
       "Ertaga bepul yetkaziladi", "Toshkent bo'ylab"],
     ['<path d="M3 10l9-6 9 6v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 21v-7h6v7"/>',
-      "Filialdan olish — bugun", "30 ta filial"],
+      "Filialdan olish — bugun", "14 ta filial"],
     ['<path d="M12 3l7.5 3v6c0 4.6-3.2 8.2-7.5 9.4C7.7 20.2 4.5 16.6 4.5 12V6z"/><path d="M9 12l2 2 4-4" stroke-linecap="round"/>',
       "2 yil kafolat", "Rasmiy servis markazlari"],
     ['<path d="M3 12a9 9 0 109-9"/><path d="M3 4v5h5"/>',
@@ -410,6 +418,20 @@ function boshqaModellarHTML(mahsulot) {
   return html + "</div></div>";
 }
 
+/* --- "0-0-12" haqiqiy hisob: dastlabki to'lovsiz, foizsiz, 12 oy -----
+   Formulasi: narx / 12, 1000 so'mgacha pastga yaxlitlanadi; bo'lishdan
+   qolgan qoldiq oxirgi (12-) oyga qo'shiladi — shu bois 11 oy bir xil,
+   12-oy biroz katta yoki teng bo'ladi. Bu mavjud DOKON.nasiyaHisobla
+   (ustama bilan, 3/6/12/24 oy) dan MUSTAQIL — do-kon.js ga tegilmaydi. */
+function nasiya0012Hisobla(narx) {
+  if (typeof narx !== "number" || !(narx > 0)) return null;
+  var oy = 12;
+  var oylik = Math.floor(narx / oy / 1000) * 1000;
+  if (oylik <= 0) oylik = Math.floor(narx / oy);
+  var oxirgiOy = narx - oylik * (oy - 1);
+  return { oy: oy, oylik: oylik, oxirgiOy: oxirgiOy };
+}
+
 /* --- Nasiya (muddatli to'lov) kalkulyatori --------------------------- */
 function nasiyaKalkulyatorHTML(mahsulot) {
   if (!mahsulot.mavjud || !DOKON.nasiyaMumkinmi(mahsulot.narx)) return "";
@@ -475,10 +497,11 @@ function oxshashMahsulotlar(mahsulot, soni) {
 function karusellarHTML(mahsulot) {
   var html = "";
 
-  var oxshash = oxshashMahsulotlar(mahsulot, 10);
+  // Yangi maket: shu kategoriyadan aniq 4 ta o'xshash mahsulot
+  var oxshash = oxshashMahsulotlar(mahsulot, 4);
   if (oxshash.length) {
     html += '<div class="bolim-ichki-blok"><h2>O\'xshash mahsulotlar</h2>' +
-      '<div class="mahsulot-grid">' + oxshash.map(mahsulotKartaHTML).join("") + "</div></div>";
+      '<div class="mahsulot-grid mahsulot-grid--4">' + oxshash.map(mahsulotKartaHTML).join("") + "</div></div>";
   }
 
   var kodlar = DOKON.korilganRoyxati(), korilgan = [];

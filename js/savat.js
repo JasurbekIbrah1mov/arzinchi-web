@@ -8,8 +8,38 @@
   Server yo'q — buyurtma brauzer xotirasiga yoziladi va mijozga raqami
   ko'rsatiladi. Haqiqiy buyurtma qabul qilish server talab qiladi
   (ARXITEKTURA masalasi, admin panel bilan birga hal qilinadi).
+
+  V4 (16.09, ega qarori): to'lov usullari ro'yxati yangilandi — naqd/
+  terminal, Payme/Click, bank kartasi (Humo/Uzcard/Visa) va "0-0-12"
+  muddatli to'lov (boshlang'ich to'lovsiz, ustamasiz). "0-0-12" oylik
+  to'lovi SOF HISOB — jami summa 12 ga bo'linadi, serverga so'rov
+  yo'q (nasiyaOylikToza). Bu rasmiylashtirish.js dagi TOLOV_GURUHLARI
+  bilan bir xil — ikkala fayl mustaqil ishlaydi, umumiy modul yo'q
+  (loyihaning odatiy konventsiyasi).
   =======================================================================
 */
+
+/* To'lov guruhlari — Jasur aka qarori (16.09). js/malumotlar-qoshimcha.js
+   dagi eski TOLOV_USULLARI (naqd/uzcard/humo/visa/nasiya, foizli) o'rniga
+   shu ro'yxat ishlatiladi — Payme/Click qo'shildi, kartalar bitta
+   guruhga birlashtirildi, nasiya "0-0-12" (foizsiz) qilib almashtirildi. */
+var TOLOV_GURUHLARI = [
+  { kod: "naqd", nom: "Naqd yoki terminal", izoh: "Yetkazib berishda naqd pul yoki terminal orqali karta bilan",
+    ikon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="7" width="16" height="10" rx="2"/><circle cx="10" cy="12" r="2"/><path d="M22 9v8a2 2 0 0 1-2 2H6"/></svg>' },
+  { kod: "payme-click", nom: "Payme / Click", izoh: "Ilova orqali onlayn, bir zumda va xavfsiz",
+    ikon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18h2"/></svg>' },
+  { kod: "karta", nom: "Humo / Uzcard / Visa", izoh: "Bank kartangiz orqali to'g'ridan-to'g'ri onlayn to'lov",
+    ikon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>' },
+  { kod: "nasiya", nom: "0-0-12 muddatli to'lov", izoh: "Boshlang'ich to'lovsiz, ustamasiz — 12 oyga teng bo'lib",
+    ikon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>' }
+];
+
+/* "0-0-12": foizsiz, sof bo'lish — jami summa aynan 12 ga bo'linadi
+   (masalan 4 800 000 -> 400 000 so'mdan). Eligibility uchun mavjud
+   DOKON.nasiyaMumkinmi (do-kon.js, min narx — NASIYA_SHARTLARI.engKamNarx)
+   ishlatiladi, hisob-kitob esa mustaqil — server/ustama shart emas. */
+function nasiyaOylikToza(jami) { return Math.round(jami / 12); }
+function somdanMatn(n) { return narxniFormatla(n).replace(" so'm", "") + " so'mdan"; }
 
 document.addEventListener("DOMContentLoaded", function () {
   var tarkib = document.getElementById("savat-tarkib");
@@ -132,15 +162,26 @@ document.addEventListener("DOMContentLoaded", function () {
   function xulosaHTML() {
     var h = DOKON.savatHisob();
     var manzil = DOKON.manzilOl();
+    var jami = h.tanlanganJami;
+    var nasiyaMumkin = DOKON.nasiyaMumkinmi(jami);
+    var nasiyaOylik = nasiyaMumkin ? nasiyaOylikToza(jami) : 0;
 
     var tolovlar = "";
-    for (var i = 0; i < TOLOV_USULLARI.length; i++) {
-      var t = TOLOV_USULLARI[i];
+    for (var i = 0; i < TOLOV_GURUHLARI.length; i++) {
+      var g = TOLOV_GURUHLARI[i];
+      var bandmi = g.kod === "nasiya" && !nasiyaMumkin;
+      var qoshimchaHTML = "";
+      if (g.kod === "nasiya") {
+        qoshimchaHTML = nasiyaMumkin
+          ? '<span class="arz-nasiya-chip">Oyiga ' + somdanMatn(nasiyaOylik) + " (12 oy)</span>"
+          : '<span class="arz-nasiya-chip arz-nasiya-chip--ojiz">Buyurtma summasi nasiya uchun kam</span>';
+      }
       tolovlar +=
-        '<label class="tolov-variant">' +
-        '<input type="radio" name="tolov" value="' + htmlXavfsiz(t.kod) + '"' + (i === 0 ? " checked" : "") + ">" +
-        "<span><strong>" + htmlXavfsiz(t.nom) + "</strong>" +
-        "<span>" + htmlXavfsiz(t.izoh) + "</span></span></label>";
+        '<label class="tolov-variant' + (bandmi ? " tolov-variant--band" : "") + '">' +
+        '<input type="radio" name="tolov" value="' + htmlXavfsiz(g.kod) + '"' + (i === 0 ? " checked" : "") +
+        (bandmi ? " disabled" : "") + ">" +
+        "<span><strong>" + htmlXavfsiz(g.nom) + "</strong>" +
+        "<span>" + htmlXavfsiz(g.izoh) + "</span>" + qoshimchaHTML + "</span></label>";
     }
 
     var yetkazishHTML = manzil
@@ -154,6 +195,11 @@ document.addEventListener("DOMContentLoaded", function () {
         '<span class="xulosa-tejam">' + narxniFormatla(h.tejaldi) + "</span></div>"
       : "";
 
+    var nasiyaEslatmaHTML = nasiyaMumkin
+      ? '<div class="arz-nasiya-eslatma"><span>Muddatli to\'lovda</span>' +
+        "<span>" + somdanMatn(nasiyaOylik) + " (0-0-12)</span></div>"
+      : "";
+
     return (
       '<aside class="savat-xulosa">' +
       "<h2>Buyurtma xulosasi</h2>" +
@@ -161,7 +207,8 @@ document.addEventListener("DOMContentLoaded", function () {
       tejamHTML +
       yetkazishHTML +
       '<div class="xulosa-qator xulosa-qator--jami"><span>Jami</span><span>' +
-      narxniFormatla(h.tanlanganJami) + "</span></div>" +
+      narxniFormatla(jami) + "</span></div>" +
+      nasiyaEslatmaHTML +
       "<h3 style=\"margin:20px 0 8px;font-size:var(--matn-h4)\">To'lov usuli</h3>" +
       '<div class="tolov-royxat">' + tolovlar + "</div>" +
       '<button type="button" class="karta-cta" id="rasmiylashtir"' +

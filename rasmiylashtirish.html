@@ -7,6 +7,24 @@
   <meta name="description" content="Buyurtmani rasmiylashtiring — aloqa ma'lumotlari, yetkazib berish va to'lov usulini tanlang.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/ilova.css">
+  <style>
+    /* V4 (16.09) — rasmiylashtirish.html'ga xos kichik qo'shimchalar
+       (0-0-12 nasiya ko'rsatkichi, band to'lov varianti, punkt-tanlash
+       info bloki). css/style.css umumiy fayl — boshqa dasturchilar shu
+       daqiqada ustida ishlayapti, shuning uchun yangi sinflar shu yerda,
+       mavjud T0 tokenlardan foydalanib. */
+    .cv-oylik { display: block; margin-top: 2px; font-size: .78rem; font-weight: 700; color: var(--nasiya-matn); }
+    .cv-oylik--ojiz { color: var(--matn-uchinchi); font-weight: 500; }
+    .checkout-variant--band { opacity: .55; }
+    .arz-nasiya-eslatma {
+      display: flex; align-items: center; justify-content: space-between;
+      margin: -2px 0 10px; padding: 8px 10px;
+      background: var(--nasiya-fon); color: var(--nasiya-matn);
+      border-radius: var(--radius-yorliq); font-size: var(--matn-kichik); font-weight: 600;
+    }
+    .punkt-malumot { margin-top: 10px; padding: 10px 12px; background: var(--yuza-uchinchi); border-radius: var(--radius-yorliq); }
+    .punkt-maydon { margin-top: var(--oraliq-3); }
+  </style>
 </head>
 <body data-sahifa="savat">
 
@@ -16,7 +34,7 @@
       <div class="xizmat-chap">
         <button type="button" class="xizmat-shahar" data-shahar-tugma aria-label="Shaharni tanlash"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span data-manzil-matn>Toshkent</span></button>
         <span>Yetkazib berish 1 kun</span>
-        <span>30 ta filial · 09:00–21:00</span>
+        <span>14 ta filial · 09:00–21:00</span>
       </div>
       <div class="xizmat-ong">
         <a href="savat.html">Buyurtmani kuzatish</a>
@@ -98,6 +116,10 @@
   <script src="js/do-kon.js"></script>
   <script src="js/qidiruv.js"></script>
   <script src="js/ilova.js"></script>
+  <!-- V4 (16.09): mijozga ochiq 14 ta filial ro'yxati — punkt tanlashda
+       ishlatiladi (mijozgaOchiqFiliallarRoyxati()). Fayl o'zi tegilmagan,
+       faqat shu sahifaga ulandi (avval faqat filiallar.html'da bor edi). -->
+  <script src="js/filiallar.js"></script>
   <script src="js/rasmiylashtirish.js"></script>
   <script src="js/harakat.js"></script>
   <nav class="mobil-panel" aria-label="Tezkor navigatsiya">

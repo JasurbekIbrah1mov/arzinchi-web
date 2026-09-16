@@ -4989,3 +4989,63 @@ html {
   body.mobil-cta-bor { padding-bottom: 124px; }
   body.mobil-cta-bor .xabar-idishi { bottom: 138px; }
 }
+
+/* ======================================================================
+   PREMIUM RASM SAHNASI (ega so'rovi, 16.09)
+   ----------------------------------------------------------------------
+   Ega yuborgan namunalar (Samsung Bespoke, Haier, Premier, Xpert) bitta
+   formulaga asoslanadi: mahsulot TO'LIQ ko'rinadi, yumshoq sahnada
+   "turadi", ostida nozik soya bor.
+
+   Muammo: `.mahsulot-karta-rasm img` da `object-fit: cover` edi — u
+   mahsulotning chetlarini QIRQIB tashlaydi (muzlatgichning tepasi yoki
+   televizorning yon tomoni kesilardi). Premium afishalarda hech qachon
+   bunday bo'lmaydi.
+
+   Yechim: `contain` (butun mahsulot ko'rinadi) + yumshoq radial sahna
+   fon + "yerga qo'nish" soyasi. Bu 272 ta mahsulotning HAMMASIGA
+   bir zumda ta'sir qiladi va hech qanday yangi rasm talab qilmaydi.
+   AI bilan rasm yasash alohida bosqich (ARZONCHI-RASM-AI-PROMPT.md).
+   ====================================================================== */
+
+.mahsulot-karta-rasm {
+  background:
+    radial-gradient(120% 95% at 50% 12%, #FFFFFF 0%, rgba(255, 255, 255, 0) 65%),
+    linear-gradient(170deg, #FBFCFD 0%, #F0F2F6 100%);
+}
+
+/* Mahsulot endi qirqilmaydi — butunlay ko'rinadi. */
+.mahsulot-karta-rasm img {
+  object-fit: contain;
+  padding: 10% 12% 13%;
+  /* Mahsulot "yerda turgandek" ko'rinishi uchun nozik soya. */
+  filter: drop-shadow(0 10px 14px rgba(16, 18, 27, 0.16));
+  transition: transform var(--tezlik);
+  /* Katalog rasmlarining aksariyatida OQ fon "pishirib" qo'yilgan — sahna
+     ustida u oq to'rtburchak bo'lib ko'rinadi. `multiply` oq piksellarni
+     ko'rinmas qiladi, ya'ni mahsulot qirqib olingandek chiqadi. Rasm fonida
+     oq bo'lmasa ham zarar yo'q — sahna deyarli oq. */
+  mix-blend-mode: multiply;
+}
+
+/* Sahna ostidagi yumshoq "yer" soyasi — afishalardagidek. */
+.mahsulot-karta-rasm::after {
+  content: "";
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: 8%;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(16, 18, 27, 0.20) 0%, rgba(16, 18, 27, 0) 72%);
+  pointer-events: none;
+}
+
+/* Kartaga olib borilganda mahsulot biroz yaqinlashadi. */
+.mahsulot-karta:hover .mahsulot-karta-rasm img { transform: scale(1.045); }
+
+/* Harakatni kamaytirishni so'raganlarga hurmat. */
+@media (prefers-reduced-motion: reduce) {
+  .mahsulot-karta-rasm img,
+  .mahsulot-karta:hover .mahsulot-karta-rasm img { transition: none; transform: none; }
+}

@@ -154,7 +154,7 @@ var REKLAMA_BANNERLARI = [
   },
   {
     id: "bn-03",
-    yorliq: "34 FILIAL",
+    yorliq: "14 FILIAL",
     sarlavha: "Sizga eng yaqin Arzonchi",
     matn: "Farg'ona, Namangan, Andijon, Toshkent va boshqa shaharlarda. Ko'rib, sinab oling.",
     tugmaMatn: "Filiallarni ko'rish",
